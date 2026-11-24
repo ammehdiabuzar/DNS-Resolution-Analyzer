@@ -1,0 +1,7 @@
+* text=auto
+*.sh text eol=lf
+*.conf text eol=lf
+*.hints text eol=lf
+db.* text eol=lf
+*.pcapng binary
+*.png binary

@@ -1,0 +1,12 @@
+; Lab root zone, served by a.root-servers.lab (10.10.1.10)
+$TTL 86400
+@                   IN SOA  a.root-servers.lab. hostmaster.nic.lab. (
+                            2026111701 3600 900 604800 300 )
+@                   IN NS   a.root-servers.lab.
+
+; Delegation of the .lab TLD, with glue
+lab.                IN NS   ns1.nic.lab.
+ns1.nic.lab.        IN A    10.10.1.11
+
+; Glue for the root server name itself (it lives under .lab)
+a.root-servers.lab. IN A    10.10.1.10

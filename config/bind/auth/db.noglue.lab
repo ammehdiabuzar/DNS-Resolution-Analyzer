@@ -1,0 +1,8 @@
+; noglue.lab, served by ns.example.lab (10.10.1.12). The .lab TLD delegates
+; this zone without glue.
+$TTL 3600
+$ORIGIN noglue.lab.
+@        IN SOA  ns.example.lab. hostmaster.noglue.lab. (
+                 2026111701 3600 900 604800 300 )
+@        IN NS   ns.example.lab.
+www      IN A    10.10.1.81

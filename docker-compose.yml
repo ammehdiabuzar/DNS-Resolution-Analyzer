@@ -1,0 +1,116 @@
+# DNS Resolution Analyzer - routed lab topology (2 routers, 4 subnets).
+#
+#   Subnet C 10.10.3.0/24      Subnet B 10.10.2.0/24       Subnet A 10.10.1.0/24
+#   client .10 --- R2 (.1) ==== .2 R2 -- R1 .1 (netem) ==== R1 .1 --- root .10 / tld .11 / auth .12
+#                                                           Subnet D 10.10.4.0/24
+#                                                    R1 .1 --- unbound .10 (53, 853, 443)
+#
+# Each Docker network is a Linux bridge (a layer-2 switch). Docker's own
+# bridge address is moved to .254 so that the routers can own .1.
+
+name: dnslab
+
+# Every node runs the same image. Only r1 has a `build:` key, so Compose builds
+# the image once (when it is missing, or with --build); the other services add
+# *reuse so they use that image and never try to pull it from a registry.
+x-node: &node
+  image: dnslab-node:1.0
+  cap_add: [NET_ADMIN, NET_RAW]
+  init: true
+  restart: "no"
+
+x-reuse: &reuse
+  pull_policy: never
+
+networks:
+  subnet_a:
+    name: dnslab_a
+    ipam: {config: [{subnet: 10.10.1.0/24, gateway: 10.10.1.254}]}
+  subnet_b:
+    name: dnslab_b
+    ipam: {config: [{subnet: 10.10.2.0/24, gateway: 10.10.2.254}]}
+  subnet_c:
+    name: dnslab_c
+    ipam: {config: [{subnet: 10.10.3.0/24, gateway: 10.10.3.254}]}
+  subnet_d:
+    name: dnslab_d
+    ipam: {config: [{subnet: 10.10.4.0/24, gateway: 10.10.4.254}]}
+
+services:
+  r1:
+    <<: *node
+    build: ./docker              # the one service that builds dnslab-node:1.0
+    container_name: r1
+    hostname: r1
+    sysctls: {net.ipv4.ip_forward: 1}
+    networks:
+      subnet_a: {ipv4_address: 10.10.1.1}
+      subnet_b: {ipv4_address: 10.10.2.1}
+      subnet_d: {ipv4_address: 10.10.4.1}
+    command: ["/opt/lab/router.sh", "r1"]
+
+  r2:
+    <<: [*node, *reuse]
+    container_name: r2
+    hostname: r2
+    sysctls: {net.ipv4.ip_forward: 1}
+    networks:
+      subnet_b: {ipv4_address: 10.10.2.2}
+      subnet_c: {ipv4_address: 10.10.3.1}
+    command: ["/opt/lab/router.sh", "r2"]
+
+  root:
+    <<: [*node, *reuse]
+    container_name: root
+    hostname: root
+    depends_on: [r1]
+    networks:
+      subnet_a: {ipv4_address: 10.10.1.10}
+    volumes: ["./config/bind/root:/etc/bind-lab:ro"]
+    command: ["/opt/lab/host.sh", "10.10.1.1", "named", "-g", "-c", "/etc/bind-lab/named.conf"]
+
+  tld:
+    <<: [*node, *reuse]
+    container_name: tld
+    hostname: tld
+    depends_on: [r1]
+    networks:
+      subnet_a: {ipv4_address: 10.10.1.11}
+    volumes: ["./config/bind/tld:/etc/bind-lab:ro"]
+    command: ["/opt/lab/host.sh", "10.10.1.1", "named", "-g", "-c", "/etc/bind-lab/named.conf"]
+
+  auth:
+    <<: [*node, *reuse]
+    container_name: auth
+    hostname: auth
+    depends_on: [r1]
+    networks:
+      subnet_a: {ipv4_address: 10.10.1.12}
+    volumes: ["./config/bind/auth:/etc/bind-lab:ro"]
+    command: ["/opt/lab/host.sh", "10.10.1.1", "named", "-g", "-c", "/etc/bind-lab/named.conf"]
+
+  unbound:
+    <<: [*node, *reuse]
+    container_name: unbound
+    hostname: unbound
+    depends_on: [r1, root, tld, auth]
+    networks:
+      subnet_d: {ipv4_address: 10.10.4.10}
+    volumes:
+      - "./config/unbound:/etc/unbound-lab:ro"
+      - "./certs:/certs"
+    command: ["/opt/lab/host.sh", "10.10.4.1", "/opt/lab/unbound.sh"]
+
+  client:
+    <<: [*node, *reuse]
+    container_name: client
+    hostname: client
+    depends_on: [r2, unbound]
+    dns: [10.10.4.10]            # system resolver = our Unbound (used by dig +trace for NS names)
+    networks:
+      subnet_c: {ipv4_address: 10.10.3.10}
+    volumes: [".:/lab"]
+    working_dir: /lab
+    environment:
+      PYTHONPATH: /lab/resolver
+    command: ["/opt/lab/host.sh", "10.10.3.1", "sleep", "infinity"]

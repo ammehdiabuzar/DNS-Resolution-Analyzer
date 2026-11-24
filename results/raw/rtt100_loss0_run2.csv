@@ -1,0 +1,185 @@
+condition,rtt_ms,loss_pct,run,metric,label,sample,value
+rtt100_loss0,100.0,0.0,2,do53_cold_ms,unbound (cache flushed),0,103.42444499997328
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.example.lab,0,302.54281700001684
+rtt100_loss0,100.0,0.0,2,iter_queries,www.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,0,100.81613600004857
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,0,100.81543500007228
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,0,100.66601699998046
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.example.lab,1,303.144288999988
+rtt100_loss0,100.0,0.0,2,iter_queries,www.example.lab,1,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.example.lab,1,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,1,100.92814799997996
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,1,100.90124500004549
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,1,100.96895399999539
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.example.lab,2,303.2424010000341
+rtt100_loss0,100.0,0.0,2,iter_queries,www.example.lab,2,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.example.lab,2,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,2,100.81613599993489
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,2,101.16897699992933
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,2,100.94335000007959
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.example.lab,3,303.17282100008924
+rtt100_loss0,100.0,0.0,2,iter_queries,www.example.lab,3,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.example.lab,3,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,3,101.02760400002353
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,3,100.84388299992497
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,3,100.92629199994008
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.example.lab,4,302.8213820000474
+rtt100_loss0,100.0,0.0,2,iter_queries,www.example.lab,4,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.example.lab,4,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,4,100.81377999995311
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,4,100.81658000001426
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,4,100.895588999947
+rtt100_loss0,100.0,0.0,2,iter_failures,www.example.lab,0,0
+rtt100_loss0,100.0,0.0,2,iter_total_ms,mail.example.lab,0,303.3260380000229
+rtt100_loss0,100.0,0.0,2,iter_queries,mail.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,mail.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,0,100.83908299998257
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,0,101.1184140000978
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,0,100.99769999999353
+rtt100_loss0,100.0,0.0,2,iter_total_ms,mail.example.lab,1,302.674166000088
+rtt100_loss0,100.0,0.0,2,iter_queries,mail.example.lab,1,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,mail.example.lab,1,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,1,100.99940099996729
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,1,100.76657400009026
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,1,100.65246199997091
+rtt100_loss0,100.0,0.0,2,iter_total_ms,mail.example.lab,2,302.7863779999507
+rtt100_loss0,100.0,0.0,2,iter_queries,mail.example.lab,2,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,mail.example.lab,2,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,2,100.87648700005047
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,2,100.85888500009332
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,2,100.79407799992168
+rtt100_loss0,100.0,0.0,2,iter_total_ms,mail.example.lab,3,304.847906999953
+rtt100_loss0,100.0,0.0,2,iter_queries,mail.example.lab,3,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,mail.example.lab,3,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,3,100.93599300000733
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,3,100.9011900000587
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,3,102.58347599994977
+rtt100_loss0,100.0,0.0,2,iter_total_ms,mail.example.lab,4,303.24432900010834
+rtt100_loss0,100.0,0.0,2,iter_queries,mail.example.lab,4,3
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,mail.example.lab,4,3
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,4,101.02230300003612
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,4,101.12561500000083
+rtt100_loss0,100.0,0.0,2,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,4,100.75457300001744
+rtt100_loss0,100.0,0.0,2,iter_failures,mail.example.lab,0,0
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.noglue.lab,0,605.4082379999954
+rtt100_loss0,100.0,0.0,2,iter_queries,www.noglue.lab,0,6
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.noglue.lab,0,6
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,0,100.83828300003006
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,0,100.80327899993335
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,0,100.80917899995256
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,0,100.8388829999376
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,0,100.85018400002355
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,0,100.76087500010544
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.noglue.lab,1,606.2626330000285
+rtt100_loss0,100.0,0.0,2,iter_queries,www.noglue.lab,1,6
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.noglue.lab,1,6
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,1,100.99790100002792
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,1,100.71857000002638
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,1,100.83908199999314
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,1,101.2066229999391
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,1,101.01720199997999
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,1,100.83698300002197
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.noglue.lab,2,606.8176940000285
+rtt100_loss0,100.0,0.0,2,iter_queries,www.noglue.lab,2,6
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.noglue.lab,2,6
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,2,101.33263800003078
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,2,100.85988499997711
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,2,100.9947000000011
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,2,100.83218200009014
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,2,100.91989199997897
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,2,101.01530199995068
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.noglue.lab,3,605.7478749999063
+rtt100_loss0,100.0,0.0,2,iter_queries,www.noglue.lab,3,6
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.noglue.lab,3,6
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,3,100.94259400000283
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,3,100.74397200003204
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,3,100.82148100002541
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,3,100.85748400001648
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,3,100.91939200003708
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,3,100.78847699992366
+rtt100_loss0,100.0,0.0,2,iter_total_ms,www.noglue.lab,4,607.7169940000431
+rtt100_loss0,100.0,0.0,2,iter_queries,www.noglue.lab,4,6
+rtt100_loss0,100.0,0.0,2,iter_packets_sent,www.noglue.lab,4,6
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,4,100.99739999998292
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,4,100.80567900001824
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,4,100.9649970000055
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,4,101.26373000002786
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,4,102.46506299995417
+rtt100_loss0,100.0,0.0,2,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,4,100.62816000004204
+rtt100_loss0,100.0,0.0,2,iter_failures,www.noglue.lab,0,0
+rtt100_loss0,100.0,0.0,2,first_query_ms,do53,0,101.36284099996828
+rtt100_loss0,100.0,0.0,2,first_query_ms,do53,1,101.09871099996326
+rtt100_loss0,100.0,0.0,2,first_query_ms,do53,2,101.73528199993598
+rtt100_loss0,100.0,0.0,2,first_query_ms,do53,3,101.27653100005318
+rtt100_loss0,100.0,0.0,2,first_query_ms,do53,4,106.96046100008516
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,0,100.9880990000056
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,1,101.08091000006425
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,2,101.07070899994142
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,3,101.1406170000555
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,4,101.07025199999953
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,5,101.05881899994529
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,6,101.28614600000674
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,7,101.2808440000299
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,8,102.5487949999615
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,do53,9,101.97132600001169
+rtt100_loss0,100.0,0.0,2,query_failures,do53,0,0
+rtt100_loss0,100.0,0.0,2,first_query_ms,dot,0,455.89606700002605
+rtt100_loss0,100.0,0.0,2,first_query_ms,dot,1,463.6295779999955
+rtt100_loss0,100.0,0.0,2,first_query_ms,dot,2,451.38493499996457
+rtt100_loss0,100.0,0.0,2,first_query_ms,dot,3,516.4571089999299
+rtt100_loss0,100.0,0.0,2,first_query_ms,dot,4,454.83964099992136
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,0,102.20235399992816
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,1,100.97300800009634
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,2,100.82659099998637
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,3,100.91310199993586
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,4,102.2668610000892
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,5,101.20813599996836
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,6,100.82579100003386
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,7,100.96690700004274
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,8,100.90379999996912
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,dot,9,100.81608999996661
+rtt100_loss0,100.0,0.0,2,query_failures,dot,0,0
+rtt100_loss0,100.0,0.0,2,first_query_ms,doh,0,340.47075299997687
+rtt100_loss0,100.0,0.0,2,first_query_ms,doh,1,329.4877590000169
+rtt100_loss0,100.0,0.0,2,first_query_ms,doh,2,335.0467139999864
+rtt100_loss0,100.0,0.0,2,first_query_ms,doh,3,332.7878850000161
+rtt100_loss0,100.0,0.0,2,first_query_ms,doh,4,328.8133780000635
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,0,103.30765799994879
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,1,103.2931559999497
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,2,107.12370299995655
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,3,104.5695049999722
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,4,102.73409100000208
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,5,102.56797099998494
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,6,103.10833500000172
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,7,104.78523100005077
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,8,102.50416400003814
+rtt100_loss0,100.0,0.0,2,repeat_query_ms,doh,9,104.04274400002578
+rtt100_loss0,100.0,0.0,2,query_failures,doh,0,0
+rtt100_loss0,100.0,0.0,2,bytes_first_query_session,do53,0,166
+rtt100_loss0,100.0,0.0,2,packets_before_first_response,do53,0,2
+rtt100_loss0,100.0,0.0,2,handshake_rtts,do53,0,0
+rtt100_loss0,100.0,0.0,2,bytes_per_repeat_query,do53,0,166.0
+rtt100_loss0,100.0,0.0,2,bytes_first_query_session,dot,0,3047
+rtt100_loss0,100.0,0.0,2,packets_before_first_response,dot,0,13
+rtt100_loss0,100.0,0.0,2,handshake_rtts,dot,0,2.074713490543168
+rtt100_loss0,100.0,0.0,2,bytes_per_repeat_query,dot,0,268.4
+rtt100_loss0,100.0,0.0,2,bytes_first_query_session,doh,0,4020
+rtt100_loss0,100.0,0.0,2,packets_before_first_response,doh,0,21
+rtt100_loss0,100.0,0.0,2,handshake_rtts,doh,0,2.1116435313318873
+rtt100_loss0,100.0,0.0,2,bytes_per_repeat_query,doh,0,728.0
+rtt100_loss0,100.0,0.0,2,iter_wire_total_ms,www.example.lab,0,302.1106719970703
+rtt100_loss0,100.0,0.0,2,iter_app_total_ms,www.example.lab,0,302.5213939999958
+rtt100_loss0,100.0,0.0,2,iter_app_minus_wire_ms,www.example.lab,0,0.4107220029254677
+rtt100_loss0,100.0,0.0,2,iter_wire_query_packets,www.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_bytes_per_lookup,www.example.lab,0,578
+rtt100_loss0,100.0,0.0,2,iter_wire_total_ms,mail.example.lab,0,332.55529403686523
+rtt100_loss0,100.0,0.0,2,iter_app_total_ms,mail.example.lab,0,332.89375699996526
+rtt100_loss0,100.0,0.0,2,iter_app_minus_wire_ms,mail.example.lab,0,0.338462963100028
+rtt100_loss0,100.0,0.0,2,iter_wire_query_packets,mail.example.lab,0,3
+rtt100_loss0,100.0,0.0,2,iter_bytes_per_lookup,mail.example.lab,0,584
+rtt100_loss0,100.0,0.0,2,iter_wire_total_ms,www.noglue.lab,0,606.769323348999
+rtt100_loss0,100.0,0.0,2,iter_app_total_ms,www.noglue.lab,0,607.2221369998942
+rtt100_loss0,100.0,0.0,2,iter_app_minus_wire_ms,www.noglue.lab,0,0.45281365089522296
+rtt100_loss0,100.0,0.0,2,iter_wire_query_packets,www.noglue.lab,0,6
+rtt100_loss0,100.0,0.0,2,iter_bytes_per_lookup,www.noglue.lab,0,1132

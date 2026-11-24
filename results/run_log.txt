@@ -1,0 +1,272 @@
+
+######## condition rtt20_loss0: RTT +20 ms, loss 0% ########
+$ docker exec r1 /opt/lab/netem.sh set 10 0
+r1 eth1: qdisc netem 8009: root refcnt 5 limit 10000 delay 10ms
+$ docker exec r2 /opt/lab/netem.sh set 10 0
+r2 eth1: qdisc netem 800a: root refcnt 5 limit 10000 delay 10ms
+$ docker exec client ping -c 5 -i 0.3 10.10.4.10
+PING 10.10.4.10 (10.10.4.10) 56(84) bytes of data.
+64 bytes from 10.10.4.10: icmp_seq=1 ttl=62 time=20.4 ms
+64 bytes from 10.10.4.10: icmp_seq=2 ttl=62 time=20.6 ms
+64 bytes from 10.10.4.10: icmp_seq=3 ttl=62 time=20.4 ms
+64 bytes from 10.10.4.10: icmp_seq=4 ttl=62 time=20.3 ms
+64 bytes from 10.10.4.10: icmp_seq=5 ttl=62 time=20.3 ms
+
+--- 10.10.4.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 1204ms
+rtt min/avg/max/mdev = 20.334/20.437/20.634/0.107 ms
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss0 --rtt 20 --loss 0 --run 1 --samples 5 --repeat 10
+[rtt20_loss0_run1] capture -> /lab/captures/experiments/rtt20_loss0_run1.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss0_run1] wrote 184 rows to /lab/results/raw/rtt20_loss0_run1.csv
+[rtt20_loss0_run1] first query ms  do53=22.4 dot=143.9 doh=139.9
+[rtt20_loss0_run1] repeat query ms do53=22.6 dot=22.7 doh=22.9
+[rtt20_loss0_run1] iterative ms    www.example.lab=64.2 mail.example.lab=64.1 www.noglue.lab=132.0
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss0 --rtt 20 --loss 0 --run 2 --samples 5 --repeat 10
+[rtt20_loss0_run2] capture -> /lab/captures/experiments/rtt20_loss0_run2.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss0_run2] wrote 184 rows to /lab/results/raw/rtt20_loss0_run2.csv
+[rtt20_loss0_run2] first query ms  do53=23.6 dot=140.5 doh=102.9
+[rtt20_loss0_run2] repeat query ms do53=23.4 dot=23.1 doh=21.9
+[rtt20_loss0_run2] iterative ms    www.example.lab=64.9 mail.example.lab=66.1 www.noglue.lab=135.2
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss0 --rtt 20 --loss 0 --run 3 --samples 5 --repeat 10
+[rtt20_loss0_run3] capture -> /lab/captures/experiments/rtt20_loss0_run3.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss0_run3] wrote 184 rows to /lab/results/raw/rtt20_loss0_run3.csv
+[rtt20_loss0_run3] first query ms  do53=22.3 dot=134.0 doh=103.8
+[rtt20_loss0_run3] repeat query ms do53=21.8 dot=21.5 doh=26.5
+[rtt20_loss0_run3] iterative ms    www.example.lab=67.4 mail.example.lab=68.1 www.noglue.lab=128.5
+
+######## condition rtt100_loss0: RTT +100 ms, loss 0% ########
+$ docker exec r1 /opt/lab/netem.sh set 50 0
+r1 eth1: qdisc netem 8009: root refcnt 5 limit 10000 delay 50ms
+$ docker exec r2 /opt/lab/netem.sh set 50 0
+r2 eth1: qdisc netem 800a: root refcnt 5 limit 10000 delay 50ms
+$ docker exec client ping -c 5 -i 0.3 10.10.4.10
+PING 10.10.4.10 (10.10.4.10) 56(84) bytes of data.
+64 bytes from 10.10.4.10: icmp_seq=1 ttl=62 time=101 ms
+64 bytes from 10.10.4.10: icmp_seq=2 ttl=62 time=101 ms
+64 bytes from 10.10.4.10: icmp_seq=3 ttl=62 time=101 ms
+64 bytes from 10.10.4.10: icmp_seq=4 ttl=62 time=101 ms
+64 bytes from 10.10.4.10: icmp_seq=5 ttl=62 time=100 ms
+
+--- 10.10.4.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 1203ms
+rtt min/avg/max/mdev = 100.313/100.577/100.724/0.153 ms
+$ docker exec client python3 experiments/measure.py --condition rtt100_loss0 --rtt 100 --loss 0 --run 1 --samples 5 --repeat 10
+[rtt100_loss0_run1] capture -> /lab/captures/experiments/rtt100_loss0_run1.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt100_loss0_run1] wrote 184 rows to /lab/results/raw/rtt100_loss0_run1.csv
+[rtt100_loss0_run1] first query ms  do53=101.2 dot=451.0 doh=335.4
+[rtt100_loss0_run1] repeat query ms do53=101.0 dot=101.1 doh=102.8
+[rtt100_loss0_run1] iterative ms    www.example.lab=305.3 mail.example.lab=304.0 www.noglue.lab=605.0
+$ docker exec client python3 experiments/measure.py --condition rtt100_loss0 --rtt 100 --loss 0 --run 2 --samples 5 --repeat 10
+[rtt100_loss0_run2] capture -> /lab/captures/experiments/rtt100_loss0_run2.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt100_loss0_run2] wrote 184 rows to /lab/results/raw/rtt100_loss0_run2.csv
+[rtt100_loss0_run2] first query ms  do53=102.5 dot=468.4 doh=333.3
+[rtt100_loss0_run2] repeat query ms do53=101.3 dot=101.2 doh=103.8
+[rtt100_loss0_run2] iterative ms    www.example.lab=303.0 mail.example.lab=303.4 www.noglue.lab=606.4
+$ docker exec client python3 experiments/measure.py --condition rtt100_loss0 --rtt 100 --loss 0 --run 3 --samples 5 --repeat 10
+[rtt100_loss0_run3] capture -> /lab/captures/experiments/rtt100_loss0_run3.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt100_loss0_run3] wrote 184 rows to /lab/results/raw/rtt100_loss0_run3.csv
+[rtt100_loss0_run3] first query ms  do53=101.5 dot=456.6 doh=344.4
+[rtt100_loss0_run3] repeat query ms do53=101.1 dot=102.0 doh=103.4
+[rtt100_loss0_run3] iterative ms    www.example.lab=303.5 mail.example.lab=302.7 www.noglue.lab=609.3
+
+######## condition rtt200_loss0: RTT +200 ms, loss 0% ########
+$ docker exec r1 /opt/lab/netem.sh set 100 0
+r1 eth1: qdisc netem 8009: root refcnt 5 limit 10000 delay 100ms
+$ docker exec r2 /opt/lab/netem.sh set 100 0
+r2 eth1: qdisc netem 800a: root refcnt 5 limit 10000 delay 100ms
+$ docker exec client ping -c 5 -i 0.3 10.10.4.10
+PING 10.10.4.10 (10.10.4.10) 56(84) bytes of data.
+64 bytes from 10.10.4.10: icmp_seq=1 ttl=62 time=200 ms
+64 bytes from 10.10.4.10: icmp_seq=2 ttl=62 time=200 ms
+64 bytes from 10.10.4.10: icmp_seq=3 ttl=62 time=200 ms
+64 bytes from 10.10.4.10: icmp_seq=4 ttl=62 time=200 ms
+64 bytes from 10.10.4.10: icmp_seq=5 ttl=62 time=200 ms
+
+--- 10.10.4.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 1203ms
+rtt min/avg/max/mdev = 200.315/200.347/200.451/0.051 ms
+$ docker exec client python3 experiments/measure.py --condition rtt200_loss0 --rtt 200 --loss 0 --run 1 --samples 5 --repeat 10
+[rtt200_loss0_run1] capture -> /lab/captures/experiments/rtt200_loss0_run1.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt200_loss0_run1] wrote 184 rows to /lab/results/raw/rtt200_loss0_run1.csv
+[rtt200_loss0_run1] first query ms  do53=201.6 dot=860.4 doh=699.1
+[rtt200_loss0_run1] repeat query ms do53=201.5 dot=201.8 doh=207.1
+[rtt200_loss0_run1] iterative ms    www.example.lab=603.5 mail.example.lab=605.5 www.noglue.lab=1214.9
+$ docker exec client python3 experiments/measure.py --condition rtt200_loss0 --rtt 200 --loss 0 --run 2 --samples 5 --repeat 10
+[rtt200_loss0_run2] capture -> /lab/captures/experiments/rtt200_loss0_run2.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt200_loss0_run2] wrote 184 rows to /lab/results/raw/rtt200_loss0_run2.csv
+[rtt200_loss0_run2] first query ms  do53=202.1 dot=859.6 doh=708.7
+[rtt200_loss0_run2] repeat query ms do53=202.1 dot=202.6 doh=205.4
+[rtt200_loss0_run2] iterative ms    www.example.lab=605.4 mail.example.lab=607.0 www.noglue.lab=1209.2
+$ docker exec client python3 experiments/measure.py --condition rtt200_loss0 --rtt 200 --loss 0 --run 3 --samples 5 --repeat 10
+[rtt200_loss0_run3] capture -> /lab/captures/experiments/rtt200_loss0_run3.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt200_loss0_run3] wrote 184 rows to /lab/results/raw/rtt200_loss0_run3.csv
+[rtt200_loss0_run3] first query ms  do53=202.4 dot=857.3 doh=691.1
+[rtt200_loss0_run3] repeat query ms do53=201.8 dot=201.7 doh=205.9
+[rtt200_loss0_run3] iterative ms    www.example.lab=607.1 mail.example.lab=607.4 www.noglue.lab=1211.5
+
+######## condition rtt20_loss2: RTT +20 ms, loss 2% ########
+$ docker exec r1 /opt/lab/netem.sh set 10 2
+r1 eth1: qdisc netem 8009: root refcnt 5 limit 10000 delay 10ms loss 2%
+$ docker exec r2 /opt/lab/netem.sh set 10 2
+r2 eth1: qdisc netem 800a: root refcnt 5 limit 10000 delay 10ms loss 2%
+$ docker exec client ping -c 5 -i 0.3 10.10.4.10
+PING 10.10.4.10 (10.10.4.10) 56(84) bytes of data.
+64 bytes from 10.10.4.10: icmp_seq=1 ttl=62 time=20.4 ms
+64 bytes from 10.10.4.10: icmp_seq=2 ttl=62 time=20.9 ms
+64 bytes from 10.10.4.10: icmp_seq=3 ttl=62 time=20.3 ms
+64 bytes from 10.10.4.10: icmp_seq=4 ttl=62 time=20.4 ms
+64 bytes from 10.10.4.10: icmp_seq=5 ttl=62 time=20.3 ms
+
+--- 10.10.4.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 1203ms
+rtt min/avg/max/mdev = 20.325/20.487/20.930/0.224 ms
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss2 --rtt 20 --loss 2 --run 1 --samples 5 --repeat 10
+[rtt20_loss2_run1] capture -> /lab/captures/experiments/rtt20_loss2_run1.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss2_run1] wrote 184 rows to /lab/results/raw/rtt20_loss2_run1.csv
+[rtt20_loss2_run1] first query ms  do53=22.0 dot=153.6 doh=355.2
+[rtt20_loss2_run1] repeat query ms do53=22.1 dot=21.2 doh=26.9
+[rtt20_loss2_run1] iterative ms    www.example.lab=265.8 mail.example.lab=463.9 www.noglue.lab=127.3
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss2 --rtt 20 --loss 2 --run 2 --samples 5 --repeat 10
+[rtt20_loss2_run2] capture -> /lab/captures/experiments/rtt20_loss2_run2.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss2_run2] wrote 184 rows to /lab/results/raw/rtt20_loss2_run2.csv
+[rtt20_loss2_run2] first query ms  do53=224.7 dot=198.6 doh=135.5
+[rtt20_loss2_run2] repeat query ms do53=122.9 dot=23.2 doh=30.5
+[rtt20_loss2_run2] iterative ms    www.example.lab=64.7 mail.example.lab=66.2 www.noglue.lab=133.4
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss2 --rtt 20 --loss 2 --run 3 --samples 5 --repeat 10
+[rtt20_loss2_run3] capture -> /lab/captures/experiments/rtt20_loss2_run3.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss2_run3] wrote 184 rows to /lab/results/raw/rtt20_loss2_run3.csv
+[rtt20_loss2_run3] first query ms  do53=22.4 dot=185.2 doh=181.9
+[rtt20_loss2_run3] repeat query ms do53=21.8 dot=21.3 doh=77.3
+[rtt20_loss2_run3] iterative ms    www.example.lab=265.9 mail.example.lab=266.8 www.noglue.lab=731.9
+
+######## condition rtt20_loss5: RTT +20 ms, loss 5% ########
+$ docker exec r1 /opt/lab/netem.sh set 10 5
+r1 eth1: qdisc netem 8009: root refcnt 5 limit 10000 delay 10ms loss 5%
+$ docker exec r2 /opt/lab/netem.sh set 10 5
+r2 eth1: qdisc netem 800a: root refcnt 5 limit 10000 delay 10ms loss 5%
+$ docker exec client ping -c 5 -i 0.3 10.10.4.10
+PING 10.10.4.10 (10.10.4.10) 56(84) bytes of data.
+64 bytes from 10.10.4.10: icmp_seq=1 ttl=62 time=22.0 ms
+64 bytes from 10.10.4.10: icmp_seq=3 ttl=62 time=20.3 ms
+64 bytes from 10.10.4.10: icmp_seq=5 ttl=62 time=20.5 ms
+
+--- 10.10.4.10 ping statistics ---
+5 packets transmitted, 3 received, 40% packet loss, time 1236ms
+rtt min/avg/max/mdev = 20.314/20.941/22.004/0.755 ms
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss5 --rtt 20 --loss 5 --run 1 --samples 5 --repeat 10
+[rtt20_loss5_run1] capture -> /lab/captures/experiments/rtt20_loss5_run1.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss5_run1] wrote 183 rows to /lab/results/raw/rtt20_loss5_run1.csv
+[rtt20_loss5_run1] first query ms  do53=222.3 dot=416.6 doh=119.6
+[rtt20_loss5_run1] repeat query ms do53=21.8 dot=21.4 doh=40.4
+[rtt20_loss5_run1] iterative ms    www.example.lab=264.7 mail.example.lab=266.1 www.noglue.lab=730.7
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss5 --rtt 20 --loss 5 --run 2 --samples 5 --repeat 10
+[rtt20_loss5_run2] capture -> /lab/captures/experiments/rtt20_loss5_run2.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss5_run2] wrote 184 rows to /lab/results/raw/rtt20_loss5_run2.csv
+[rtt20_loss5_run2] first query ms  do53=21.5 dot=143.8 doh=151.6
+[rtt20_loss5_run2] repeat query ms do53=121.7 dot=45.0 doh=32.8
+[rtt20_loss5_run2] iterative ms    www.example.lab=668.1 mail.example.lab=667.4 www.noglue.lab=1534.1
+$ docker exec client python3 experiments/measure.py --condition rtt20_loss5 --rtt 20 --loss 5 --run 3 --samples 5 --repeat 10
+[rtt20_loss5_run3] capture -> /lab/captures/experiments/rtt20_loss5_run3.pcapng
+  iterative www.example.lab: done (0 failures)
+  iterative mail.example.lab: done (0 failures)
+  iterative www.noglue.lab: done (0 failures)
+  transport do53: done (0 failures)
+  transport dot: done (0 failures)
+  transport doh: done (0 failures)
+[rtt20_loss5_run3] wrote 184 rows to /lab/results/raw/rtt20_loss5_run3.csv
+[rtt20_loss5_run3] first query ms  do53=23.7 dot=362.9 doh=340.2
+[rtt20_loss5_run3] repeat query ms do53=222.3 dot=22.0 doh=83.5
+[rtt20_loss5_run3] iterative ms    www.example.lab=269.2 mail.example.lab=666.5 www.noglue.lab=538.5
+$ docker exec r1 /opt/lab/netem.sh clear
+r1 eth1: qdisc noqueue 0: root refcnt 2 
+$ docker exec r2 /opt/lab/netem.sh clear
+r2 eth1: qdisc noqueue 0: root refcnt 2 
+
+all runs finished in 11.4 min
+$ docker exec client python3 analysis/analyze.py
+runs loaded: 15  rows: 2759
+wrote /lab/results/summary.csv, experiment_table.md and plots/

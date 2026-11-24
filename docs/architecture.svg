@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1220 900" width="1220" height="900" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="aBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/></marker>
+    <marker id="aOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/></marker>
+    <marker id="aAqua" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1baf7a"/></marker>
+    <marker id="aYellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c98500"/></marker>
+    <marker id="aGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52514e"/></marker>
+  </defs>
+  <style>
+    .t{fill:#0b0b0b} .s{fill:#52514e} .h{font-size:20px;font-weight:600} .sub{font-size:13px}
+    .net{fill:#f1f0ec;stroke:#c9c7bf;stroke-width:1.5}
+    .node{fill:#ffffff;stroke:#9b998f;stroke-width:1.5}
+    .router{fill:#ffffff;stroke:#0b0b0b;stroke-width:2}
+    .sw{fill:#e4e3df;stroke:#9b998f;stroke-width:1.2}
+    .link{stroke:#9b998f;stroke-width:2;fill:none}
+    .b{font-weight:600} .mono{font-family:Consolas, Menlo, monospace}
+  </style>
+  <rect width="1220" height="900" fill="#fcfcfb"/>
+
+  <text x="30" y="40" class="t h">DNS Resolution Analyzer: lab topology, addressing and flows</text>
+  <text x="30" y="62" class="s sub">7 Docker containers on one laptop · 2 Linux routers with static routes · 4 /24 subnets (each a Docker bridge = layer-2 switch) · bridge gateway moved to .254</text>
+
+  <!-- ===== Subnet C ===== -->
+  <rect x="30" y="250" width="240" height="250" rx="10" class="net"/>
+  <text x="46" y="276" class="t b" font-size="15">Subnet C · 10.10.3.0/24</text>
+  <text x="46" y="294" class="s" font-size="12">client LAN · switch: bridge dnslab_c</text>
+  <rect x="120" y="310" width="70" height="24" rx="4" class="sw"/><text x="155" y="327" text-anchor="middle" class="t" font-size="11">SW-C</text>
+  <rect x="50" y="370" width="200" height="112" rx="8" class="node"/>
+  <text x="62" y="392" class="t b" font-size="14">Client</text>
+  <text x="62" y="410" class="t mono" font-size="12">eth0 10.10.3.10/24</text>
+  <text x="62" y="427" class="s" font-size="12">gw 10.10.3.1 (R2)</text>
+  <text x="62" y="444" class="s" font-size="12">Python iterative resolver,</text>
+  <text x="62" y="460" class="s" font-size="12">dnspython/httpx clients, dumpcap</text>
+  <text x="62" y="476" class="s" font-size="12">src ports: ephemeral</text>
+  <line x1="155" y1="334" x2="155" y2="370" class="link"/>
+
+  <!-- ===== R2 ===== -->
+  <rect x="340" y="330" width="160" height="96" rx="8" class="router"/>
+  <text x="420" y="354" text-anchor="middle" class="t b" font-size="16">R2 (router)</text>
+  <text x="420" y="374" text-anchor="middle" class="t mono" font-size="12">C: 10.10.3.1</text>
+  <text x="420" y="392" text-anchor="middle" class="t mono" font-size="12">B: 10.10.2.2</text>
+  <text x="420" y="412" text-anchor="middle" class="s" font-size="11">ip_forward=1 · netem egress</text>
+  <path d="M190,322 L270,322 L270,378 L340,378" class="link"/>
+
+  <!-- ===== Subnet B (transit) ===== -->
+  <rect x="512" y="300" width="196" height="150" rx="10" class="net"/>
+  <text x="610" y="322" text-anchor="middle" class="t b" font-size="14">Subnet B · 10.10.2.0/24</text>
+  <text x="610" y="339" text-anchor="middle" class="s" font-size="12">transit link · bridge dnslab_b</text>
+  <rect x="575" y="366" width="70" height="24" rx="4" class="sw"/><text x="610" y="383" text-anchor="middle" class="t" font-size="11">SW-B</text>
+  <line x1="500" y1="378" x2="575" y2="378" stroke="#0b0b0b" stroke-width="4"/>
+  <line x1="645" y1="378" x2="720" y2="378" stroke="#0b0b0b" stroke-width="4"/>
+  <rect x="524" y="404" width="172" height="38" rx="6" fill="#fde0d2" stroke="#eb6834" stroke-width="1.2"/>
+  <text x="610" y="420" text-anchor="middle" class="t b" font-size="12">tc netem (both routers)</text>
+  <text x="610" y="436" text-anchor="middle" class="t" font-size="11">RTT 20/100/200 ms · loss 0/2/5 %</text>
+
+  <!-- ===== R1 ===== -->
+  <rect x="720" y="320" width="160" height="116" rx="8" class="router"/>
+  <text x="800" y="344" text-anchor="middle" class="t b" font-size="16">R1 (router)</text>
+  <text x="800" y="364" text-anchor="middle" class="t mono" font-size="12">B: 10.10.2.1</text>
+  <text x="800" y="382" text-anchor="middle" class="t mono" font-size="12">A: 10.10.1.1</text>
+  <text x="800" y="400" text-anchor="middle" class="t mono" font-size="12">D: 10.10.4.1</text>
+  <text x="800" y="420" text-anchor="middle" class="s" font-size="11">ip_forward=1 · netem egress</text>
+
+  <!-- ===== Subnet A ===== -->
+  <rect x="940" y="90" width="260" height="330" rx="10" class="net"/>
+  <text x="956" y="116" class="t b" font-size="15">Subnet A · 10.10.1.0/24</text>
+  <text x="956" y="134" class="s" font-size="12">DNS hierarchy (BIND9) · bridge dnslab_a</text>
+  <rect x="955" y="150" width="70" height="24" rx="4" class="sw"/><text x="990" y="167" text-anchor="middle" class="t" font-size="11">SW-A</text>
+  <rect x="1040" y="150" width="148" height="76" rx="8" class="node"/>
+  <text x="1050" y="170" class="t b" font-size="13">Root server</text>
+  <text x="1050" y="187" class="t mono" font-size="11">10.10.1.10</text>
+  <text x="1050" y="203" class="s" font-size="11">a.root-servers.lab</text>
+  <text x="1050" y="219" class="s" font-size="11">UDP/TCP 53 · zone "."</text>
+  <rect x="1040" y="236" width="148" height="76" rx="8" class="node"/>
+  <text x="1050" y="256" class="t b" font-size="13">TLD server (.lab)</text>
+  <text x="1050" y="273" class="t mono" font-size="11">10.10.1.11</text>
+  <text x="1050" y="289" class="s" font-size="11">ns1.nic.lab</text>
+  <text x="1050" y="305" class="s" font-size="11">UDP/TCP 53 · zone lab.</text>
+  <rect x="1040" y="322" width="148" height="88" rx="8" class="node"/>
+  <text x="1050" y="342" class="t b" font-size="13">Authoritative</text>
+  <text x="1050" y="359" class="t mono" font-size="11">10.10.1.12</text>
+  <text x="1050" y="375" class="s" font-size="11">ns1/ns.example.lab</text>
+  <text x="1050" y="391" class="s" font-size="11">example.lab, noglue.lab</text>
+  <text x="1050" y="405" class="s" font-size="11">UDP/TCP 53</text>
+  <path d="M990,174 L990,360 L1040,360 M990,188 L1040,188 M990,274 L1040,274" class="link"/>
+  <text x="956" y="410" class="s" font-size="11">gw 10.10.1.1</text>
+  <path d="M880,360 L920,360 L920,162 L955,162" class="link"/>
+
+  <!-- ===== Subnet D ===== -->
+  <rect x="940" y="460" width="260" height="190" rx="10" class="net"/>
+  <text x="956" y="486" class="t b" font-size="15">Subnet D · 10.10.4.0/24</text>
+  <text x="956" y="504" class="s" font-size="12">recursive resolver · bridge dnslab_d</text>
+  <rect x="955" y="520" width="70" height="24" rx="4" class="sw"/><text x="990" y="537" text-anchor="middle" class="t" font-size="11">SW-D</text>
+  <rect x="1040" y="520" width="148" height="118" rx="8" class="node"/>
+  <text x="1050" y="540" class="t b" font-size="13">Unbound</text>
+  <text x="1050" y="557" class="t mono" font-size="11">10.10.4.10</text>
+  <text x="1050" y="574" class="s" font-size="11">Do53 UDP/TCP 53</text>
+  <text x="1050" y="590" class="s" font-size="11">DoT TCP 853 (TLS 1.3)</text>
+  <text x="1050" y="606" class="s" font-size="11">DoH TCP 443 (h2,/dns-query)</text>
+  <text x="1050" y="622" class="s" font-size="11">root hints → 10.10.1.10</text>
+  <path d="M1025,532 L1040,532" class="link"/>
+  <text x="956" y="640" class="s" font-size="11">gw 10.10.4.1</text>
+  <path d="M880,410 L920,410 L920,532 L955,532" class="link"/>
+
+  <!-- ===== Flow arrows ===== -->
+  <path d="M240,375 C 420,200 760,170 1038,186" fill="none" stroke="#2a78d6" stroke-width="2.5" marker-end="url(#aBlue)"/>
+  <text x="560" y="256" fill="#2a78d6" font-size="12" font-weight="600">① iterative: UDP 53 (TCP 53 if TC=1), RD=0</text>
+  <path d="M240,470 C 450,560 800,600 1038,585" fill="none" stroke="#eb6834" stroke-width="2.5" marker-end="url(#aOrange)"/>
+  <path d="M240,478 C 450,580 800,620 1038,600" fill="none" stroke="#1baf7a" stroke-width="2.5" marker-end="url(#aAqua)"/>
+  <path d="M240,486 C 450,600 800,640 1038,615" fill="none" stroke="#c98500" stroke-width="2.5" marker-end="url(#aYellow)"/>
+  <text x="450" y="600" fill="#eb6834" font-size="12" font-weight="600">② Do53 UDP 53</text>
+  <text x="560" y="620" fill="#1baf7a" font-size="12" font-weight="600">③ DoT TCP 853</text>
+  <text x="680" y="644" fill="#c98500" font-size="12" font-weight="600">④ DoH TCP 443</text>
+  <path d="M1188,560 C 1215,480 1215,300 1190,270" fill="none" stroke="#52514e" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#aGray)"/>
+  <text x="960" y="445" fill="#52514e" font-size="12" font-weight="600">⑤ Unbound recursion via R1 (UDP 53)</text>
+
+  <!-- ===== Tables ===== -->
+  <rect x="30" y="680" width="560" height="200" rx="10" fill="#ffffff" stroke="#c9c7bf"/>
+  <text x="46" y="704" class="t b" font-size="14">Static routes</text>
+  <text x="46" y="728" class="t mono" font-size="12">R1: 10.10.3.0/24 via 10.10.2.2</text>
+  <text x="46" y="746" class="t mono" font-size="12">R2: 10.10.1.0/24 via 10.10.2.1</text>
+  <text x="46" y="764" class="t mono" font-size="12">R2: 10.10.4.0/24 via 10.10.2.1</text>
+  <text x="46" y="782" class="t mono" font-size="12">hosts: default via their subnet's router (.1)</text>
+  <text x="46" y="808" class="t b" font-size="14">Impairment</text>
+  <text x="46" y="830" class="t" font-size="12">netem on the 10.10.2.0/24 interface of R1 and R2: each adds RTT/2</text>
+  <text x="46" y="848" class="t" font-size="12">one-way delay and the loss rate, so both directions are impaired.</text>
+  <text x="46" y="866" class="t" font-size="12">All client traffic (flows ①–④) crosses this link; ⑤ does not.</text>
+
+  <rect x="610" y="680" width="590" height="200" rx="10" fill="#ffffff" stroke="#c9c7bf"/>
+  <text x="626" y="704" class="t b" font-size="14">Communication flows</text>
+  <text x="626" y="728" fill="#2a78d6" font-size="12" font-weight="600">①</text><text x="646" y="728" class="t" font-size="12">client:eph → R2 → R1 → root .10 → TLD .11 → auth .12, port 53</text>
+  <text x="626" y="750" fill="#eb6834" font-size="12" font-weight="600">②</text><text x="646" y="750" class="t" font-size="12">client:eph → R2 → R1 → Unbound 10.10.4.10:53/UDP (plaintext)</text>
+  <text x="626" y="772" fill="#1baf7a" font-size="12" font-weight="600">③</text><text x="646" y="772" class="t" font-size="12">client:eph → Unbound :853/TCP, TLS 1.3, 2-byte length framing</text>
+  <text x="626" y="794" fill="#c98500" font-size="12" font-weight="600">④</text><text x="646" y="794" class="t" font-size="12">client:eph → Unbound :443/TCP, TLS 1.3 + HTTP/2 POST /dns-query</text>
+  <text x="626" y="816" fill="#52514e" font-size="12" font-weight="600">⑤</text><text x="646" y="816" class="t" font-size="12">Unbound → R1 → root/TLD/auth :53 (cache misses only)</text>
+  <text x="626" y="842" class="s" font-size="12">ICMP: ping/traceroute client → 10.10.1.10 shows hops R2 (10.10.3.1)</text>
+  <text x="626" y="860" class="s" font-size="12">and R1 (10.10.2.1). Docker bridge gateways (.254) are not used.</text>
+</svg>

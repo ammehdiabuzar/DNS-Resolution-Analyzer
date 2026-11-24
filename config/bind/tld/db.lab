@@ -1,0 +1,17 @@
+; .lab TLD zone, served by ns1.nic.lab (10.10.1.11)
+$TTL 86400
+$ORIGIN lab.
+@                   IN SOA  ns1.nic.lab. hostmaster.nic.lab. (
+                            2026111701 3600 900 604800 300 )
+@                   IN NS   ns1.nic.lab.
+ns1.nic             IN A    10.10.1.11
+a.root-servers      IN A    10.10.1.10
+
+; example.lab: delegation WITH glue (in-bailiwick nameserver)
+example             IN NS   ns1.example.lab.
+ns1.example         IN A    10.10.1.12
+
+; noglue.lab: delegation WITHOUT glue. Its nameserver ns.example.lab lives
+; in another zone and no address is given here, so a resolver must first
+; resolve ns.example.lab (root -> lab -> example.lab) before it can continue.
+noglue              IN NS   ns.example.lab.

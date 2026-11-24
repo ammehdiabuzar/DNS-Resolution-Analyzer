@@ -1,0 +1,25 @@
+; example.lab, served by ns1.example.lab / ns.example.lab (10.10.1.12)
+$TTL 3600
+$ORIGIN example.lab.
+@        IN SOA  ns1.example.lab. hostmaster.example.lab. (
+                 2026111701 3600 900 604800 300 )
+@        IN NS   ns1.example.lab.
+@        IN MX   10 mail.example.lab.
+ns1      IN A    10.10.1.12
+ns       IN A    10.10.1.12          ; nameserver name used by noglue.lab
+www      IN A    10.10.1.80
+mail     IN A    10.10.1.25
+web      IN CNAME www.example.lab.   ; alias, exercises CNAME following
+
+; big.example.lab: TXT RRset larger than 512 bytes. A query without EDNS
+; gets a truncated (TC=1) UDP reply, which forces a retry over TCP 53.
+big      IN TXT  "record-01 padding padding padding padding padding padding padding"
+big      IN TXT  "record-02 padding padding padding padding padding padding padding"
+big      IN TXT  "record-03 padding padding padding padding padding padding padding"
+big      IN TXT  "record-04 padding padding padding padding padding padding padding"
+big      IN TXT  "record-05 padding padding padding padding padding padding padding"
+big      IN TXT  "record-06 padding padding padding padding padding padding padding"
+big      IN TXT  "record-07 padding padding padding padding padding padding padding"
+big      IN TXT  "record-08 padding padding padding padding padding padding padding"
+big      IN TXT  "record-09 padding padding padding padding padding padding padding"
+big      IN TXT  "record-10 padding padding padding padding padding padding padding"

@@ -1,0 +1,306 @@
+condition,rtt_ms,loss_pct,metric,label,mean,std,min,max,runs
+rtt20_loss0,20.000,0.000,bytes_first_query_session,do53,166.000,0.000,166.000,166.000,3
+rtt100_loss0,100.000,0.000,bytes_first_query_session,do53,166.000,0.000,166.000,166.000,3
+rtt200_loss0,200.000,0.000,bytes_first_query_session,do53,166.000,0.000,166.000,166.000,3
+rtt20_loss2,20.000,2.000,bytes_first_query_session,do53,166.000,0.000,166.000,166.000,3
+rtt20_loss5,20.000,5.000,bytes_first_query_session,do53,166.000,0.000,166.000,166.000,3
+rtt20_loss0,20.000,0.000,bytes_first_query_session,doh,4019.000,1.000,4018.000,4020.000,3
+rtt100_loss0,100.000,0.000,bytes_first_query_session,doh,4019.333,1.155,4018.000,4020.000,3
+rtt200_loss0,200.000,0.000,bytes_first_query_session,doh,4107.333,75.633,4020.000,4151.000,3
+rtt20_loss2,20.000,2.000,bytes_first_query_session,doh,4041.000,100.817,3953.000,4151.000,3
+rtt20_loss5,20.000,5.000,bytes_first_query_session,doh,4183.333,169.654,4018.000,4357.000,3
+rtt20_loss0,20.000,0.000,bytes_first_query_session,dot,3046.667,0.577,3046.000,3047.000,3
+rtt100_loss0,100.000,0.000,bytes_first_query_session,dot,3046.333,0.577,3046.000,3047.000,3
+rtt200_loss0,200.000,0.000,bytes_first_query_session,dot,3045.667,1.155,3045.000,3047.000,3
+rtt20_loss2,20.000,2.000,bytes_first_query_session,dot,3046.000,1.000,3045.000,3047.000,3
+rtt20_loss5,20.000,5.000,bytes_first_query_session,dot,3117.667,123.265,3046.000,3260.000,3
+rtt20_loss0,20.000,0.000,bytes_per_repeat_query,do53,166.000,0.000,166.000,166.000,3
+rtt100_loss0,100.000,0.000,bytes_per_repeat_query,do53,166.000,0.000,166.000,166.000,3
+rtt200_loss0,200.000,0.000,bytes_per_repeat_query,do53,166.000,0.000,166.000,166.000,3
+rtt20_loss2,20.000,2.000,bytes_per_repeat_query,do53,166.000,0.000,166.000,166.000,3
+rtt20_loss5,20.000,5.000,bytes_per_repeat_query,do53,175.467,10.588,166.000,186.900,3
+rtt20_loss0,20.000,0.000,bytes_per_repeat_query,doh,732.433,3.842,728.000,734.800,3
+rtt100_loss0,100.000,0.000,bytes_per_repeat_query,doh,725.767,3.955,721.200,728.100,3
+rtt200_loss0,200.000,0.000,bytes_per_repeat_query,doh,721.400,6.600,714.800,728.000,3
+rtt20_loss2,20.000,2.000,bytes_per_repeat_query,doh,728.400,17.016,716.000,747.800,3
+rtt20_loss5,20.000,5.000,bytes_per_repeat_query,doh,788.700,105.119,703.300,906.100,3
+rtt20_loss0,20.000,0.000,bytes_per_repeat_query,dot,264.167,7.592,255.400,268.600,3
+rtt100_loss0,100.000,0.000,bytes_per_repeat_query,dot,268.533,0.115,268.400,268.600,3
+rtt200_loss0,200.000,0.000,bytes_per_repeat_query,dot,268.700,0.173,268.500,268.800,3
+rtt20_loss2,20.000,2.000,bytes_per_repeat_query,dot,275.533,11.884,261.900,283.700,3
+rtt20_loss5,20.000,5.000,bytes_per_repeat_query,dot,301.467,65.738,254.000,376.500,3
+rtt20_loss0,20.000,0.000,do53_cold_ms,unbound (cache flushed),28.300,5.022,24.045,33.840,3
+rtt100_loss0,100.000,0.000,do53_cold_ms,unbound (cache flushed),104.303,0.903,103.424,105.228,3
+rtt200_loss0,200.000,0.000,do53_cold_ms,unbound (cache flushed),207.643,5.424,204.047,213.881,3
+rtt20_loss2,20.000,2.000,do53_cold_ms,unbound (cache flushed),35.661,6.212,30.978,42.707,3
+rtt20_loss5,20.000,5.000,do53_cold_ms,unbound (cache flushed),34.423,11.554,23.290,46.356,3
+rtt20_loss0,20.000,0.000,first_query_ms,do53,22.788,0.745,22.286,23.644,3
+rtt100_loss0,100.000,0.000,first_query_ms,do53,101.755,0.652,101.233,102.487,3
+rtt200_loss0,200.000,0.000,first_query_ms,do53,202.002,0.417,201.561,202.389,3
+rtt20_loss2,20.000,2.000,first_query_ms,do53,89.702,116.930,22.009,224.720,3
+rtt20_loss5,20.000,5.000,first_query_ms,do53,89.147,115.323,21.459,222.304,3
+rtt20_loss0,20.000,0.000,first_query_ms,doh,115.551,21.094,102.941,139.904,3
+rtt100_loss0,100.000,0.000,first_query_ms,doh,337.693,5.890,333.321,344.390,3
+rtt200_loss0,200.000,0.000,first_query_ms,doh,699.631,8.851,691.060,708.738,3
+rtt20_loss2,20.000,2.000,first_query_ms,doh,224.193,115.762,135.546,355.160,3
+rtt20_loss5,20.000,5.000,first_query_ms,doh,203.776,119.226,119.561,340.201,3
+rtt20_loss0,20.000,0.000,first_query_ms,dot,139.503,5.031,134.032,143.932,3
+rtt100_loss0,100.000,0.000,first_query_ms,dot,458.682,8.895,451.028,468.441,3
+rtt200_loss0,200.000,0.000,first_query_ms,dot,859.131,1.611,857.327,860.425,3
+rtt20_loss2,20.000,2.000,first_query_ms,dot,179.160,23.132,153.593,198.640,3
+rtt20_loss5,20.000,5.000,first_query_ms,dot,307.743,144.480,143.817,416.553,3
+rtt20_loss0,20.000,0.000,handshake_rtts,do53,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,handshake_rtts,do53,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,handshake_rtts,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,handshake_rtts,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,handshake_rtts,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,handshake_rtts,doh,3.439,0.118,3.334,3.567,3
+rtt100_loss0,100.000,0.000,handshake_rtts,doh,2.183,0.075,2.112,2.261,3
+rtt200_loss0,200.000,0.000,handshake_rtts,doh,2.338,0.133,2.188,2.443,3
+rtt20_loss2,20.000,2.000,handshake_rtts,doh,4.482,2.584,2.657,7.438,3
+rtt20_loss5,20.000,5.000,handshake_rtts,doh,2.672,0.195,2.449,2.810,3
+rtt20_loss0,20.000,0.000,handshake_rtts,dot,3.315,0.256,3.086,3.591,3
+rtt100_loss0,100.000,0.000,handshake_rtts,dot,2.208,0.217,2.075,2.459,3
+rtt200_loss0,200.000,0.000,handshake_rtts,dot,2.111,0.059,2.055,2.173,3
+rtt20_loss2,20.000,2.000,handshake_rtts,dot,3.082,0.559,2.437,3.410,3
+rtt20_loss5,20.000,5.000,handshake_rtts,dot,2.121,0.932,1.059,2.808,3
+rtt20_loss0,20.000,0.000,iter_app_minus_wire_ms,mail.example.lab,0.691,0.291,0.479,1.023,3
+rtt100_loss0,100.000,0.000,iter_app_minus_wire_ms,mail.example.lab,0.419,0.070,0.338,0.462,3
+rtt200_loss0,200.000,0.000,iter_app_minus_wire_ms,mail.example.lab,0.707,0.067,0.645,0.778,3
+rtt20_loss2,20.000,2.000,iter_app_minus_wire_ms,mail.example.lab,0.673,0.220,0.455,0.894,3
+rtt20_loss5,20.000,5.000,iter_app_minus_wire_ms,mail.example.lab,0.978,0.403,0.559,1.363,3
+rtt20_loss0,20.000,0.000,iter_app_minus_wire_ms,www.example.lab,0.897,0.394,0.464,1.235,3
+rtt100_loss0,100.000,0.000,iter_app_minus_wire_ms,www.example.lab,0.447,0.107,0.363,0.567,3
+rtt200_loss0,200.000,0.000,iter_app_minus_wire_ms,www.example.lab,0.727,0.233,0.501,0.967,3
+rtt20_loss2,20.000,2.000,iter_app_minus_wire_ms,www.example.lab,0.477,0.093,0.413,0.584,3
+rtt20_loss5,20.000,5.000,iter_app_minus_wire_ms,www.example.lab,1.064,0.219,0.848,1.287,3
+rtt20_loss0,20.000,0.000,iter_app_minus_wire_ms,www.noglue.lab,0.944,0.489,0.477,1.452,3
+rtt100_loss0,100.000,0.000,iter_app_minus_wire_ms,www.noglue.lab,0.384,0.086,0.288,0.453,3
+rtt200_loss0,200.000,0.000,iter_app_minus_wire_ms,www.noglue.lab,1.292,0.312,0.959,1.580,3
+rtt20_loss2,20.000,2.000,iter_app_minus_wire_ms,www.noglue.lab,0.829,0.515,0.422,1.408,3
+rtt20_loss5,20.000,5.000,iter_app_minus_wire_ms,www.noglue.lab,1.078,0.783,0.568,1.980,3
+rtt20_loss0,20.000,0.000,iter_app_total_ms,mail.example.lab,64.313,1.901,62.555,66.331,3
+rtt100_loss0,100.000,0.000,iter_app_total_ms,mail.example.lab,313.002,17.228,302.866,332.894,3
+rtt200_loss0,200.000,0.000,iter_app_total_ms,mail.example.lab,605.283,1.408,604.313,606.898,3
+rtt20_loss2,20.000,2.000,iter_app_total_ms,mail.example.lab,115.841,88.990,63.862,218.596,3
+rtt20_loss5,20.000,5.000,iter_app_total_ms,mail.example.lab,401.749,580.467,63.792,1072.006,3
+rtt20_loss0,20.000,0.000,iter_app_total_ms,www.example.lab,65.902,2.613,62.886,67.487,3
+rtt100_loss0,100.000,0.000,iter_app_total_ms,www.example.lab,303.743,2.014,302.521,306.067,3
+rtt200_loss0,200.000,0.000,iter_app_total_ms,www.example.lab,608.620,2.736,605.940,611.410,3
+rtt20_loss2,20.000,2.000,iter_app_total_ms,www.example.lab,67.508,5.064,62.975,72.973,3
+rtt20_loss5,20.000,5.000,iter_app_total_ms,www.example.lab,67.245,1.253,66.065,68.560,3
+rtt20_loss0,20.000,0.000,iter_app_total_ms,www.noglue.lab,132.138,5.269,126.443,136.839,3
+rtt100_loss0,100.000,0.000,iter_app_total_ms,www.noglue.lab,606.145,1.114,604.997,607.222,3
+rtt200_loss0,200.000,0.000,iter_app_total_ms,www.noglue.lab,1213.354,2.476,1210.499,1214.910,3
+rtt20_loss2,20.000,2.000,iter_app_total_ms,www.noglue.lab,130.617,3.518,127.037,134.070,3
+rtt20_loss5,20.000,5.000,iter_app_total_ms,www.noglue.lab,464.753,580.362,128.406,1134.896,3
+rtt20_loss0,20.000,0.000,iter_bytes_per_lookup,mail.example.lab,584.000,0.000,584.000,584.000,3
+rtt100_loss0,100.000,0.000,iter_bytes_per_lookup,mail.example.lab,584.000,0.000,584.000,584.000,3
+rtt200_loss0,200.000,0.000,iter_bytes_per_lookup,mail.example.lab,584.000,0.000,584.000,584.000,3
+rtt20_loss2,20.000,2.000,iter_bytes_per_lookup,mail.example.lab,584.000,0.000,584.000,584.000,3
+rtt20_loss5,20.000,5.000,iter_bytes_per_lookup,mail.example.lab,609.333,43.879,584.000,660.000,3
+rtt20_loss0,20.000,0.000,iter_bytes_per_lookup,www.example.lab,578.000,0.000,578.000,578.000,3
+rtt100_loss0,100.000,0.000,iter_bytes_per_lookup,www.example.lab,578.000,0.000,578.000,578.000,3
+rtt200_loss0,200.000,0.000,iter_bytes_per_lookup,www.example.lab,578.000,0.000,578.000,578.000,3
+rtt20_loss2,20.000,2.000,iter_bytes_per_lookup,www.example.lab,578.000,0.000,578.000,578.000,3
+rtt20_loss5,20.000,5.000,iter_bytes_per_lookup,www.example.lab,578.000,0.000,578.000,578.000,3
+rtt20_loss0,20.000,0.000,iter_bytes_per_lookup,www.noglue.lab,1132.000,0.000,1132.000,1132.000,3
+rtt100_loss0,100.000,0.000,iter_bytes_per_lookup,www.noglue.lab,1132.000,0.000,1132.000,1132.000,3
+rtt200_loss0,200.000,0.000,iter_bytes_per_lookup,www.noglue.lab,1132.000,0.000,1132.000,1132.000,3
+rtt20_loss2,20.000,2.000,iter_bytes_per_lookup,www.noglue.lab,1132.000,0.000,1132.000,1132.000,3
+rtt20_loss5,20.000,5.000,iter_bytes_per_lookup,www.noglue.lab,1156.667,42.724,1132.000,1206.000,3
+rtt20_loss0,20.000,0.000,iter_failures,mail.example.lab,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,iter_failures,mail.example.lab,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,iter_failures,mail.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,iter_failures,mail.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,iter_failures,mail.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,iter_failures,www.example.lab,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,iter_failures,www.example.lab,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,iter_failures,www.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,iter_failures,www.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,iter_failures,www.example.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,iter_failures,www.noglue.lab,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,iter_failures,www.noglue.lab,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,iter_failures,www.noglue.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,iter_failures,www.noglue.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,iter_failures,www.noglue.lab,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,iter_packets_sent,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_packets_sent,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_packets_sent,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_packets_sent,mail.example.lab,3.200,0.200,3.000,3.400,3
+rtt20_loss5,20.000,5.000,iter_packets_sent,mail.example.lab,3.467,0.231,3.200,3.600,3
+rtt20_loss0,20.000,0.000,iter_packets_sent,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_packets_sent,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_packets_sent,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_packets_sent,www.example.lab,3.133,0.115,3.000,3.200,3
+rtt20_loss5,20.000,5.000,iter_packets_sent,www.example.lab,3.333,0.231,3.200,3.600,3
+rtt20_loss0,20.000,0.000,iter_packets_sent,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt100_loss0,100.000,0.000,iter_packets_sent,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt200_loss0,200.000,0.000,iter_packets_sent,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss2,20.000,2.000,iter_packets_sent,www.noglue.lab,6.200,0.346,6.000,6.600,3
+rtt20_loss5,20.000,5.000,iter_packets_sent,www.noglue.lab,6.800,0.529,6.400,7.400,3
+rtt20_loss0,20.000,0.000,iter_queries,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_queries,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_queries,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_queries,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss5,20.000,5.000,iter_queries,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss0,20.000,0.000,iter_queries,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_queries,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_queries,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_queries,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss5,20.000,5.000,iter_queries,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss0,20.000,0.000,iter_queries,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt100_loss0,100.000,0.000,iter_queries,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt200_loss0,200.000,0.000,iter_queries,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss2,20.000,2.000,iter_queries,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss5,20.000,5.000,iter_queries,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss0,20.000,0.000,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,21.785,0.532,21.187,22.204,3
+rtt100_loss0,100.000,0.000,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,101.033,0.258,100.838,101.325,3
+rtt200_loss0,200.000,0.000,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,201.661,0.587,201.049,202.221,3
+rtt20_loss2,20.000,2.000,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,21.742,0.749,21.029,22.523,3
+rtt20_loss5,20.000,5.000,iter_step_ms,mail.example.lab | step 1: mail.example.lab. @ zone .,288.873,305.989,21.689,622.687,3
+rtt20_loss0,20.000,0.000,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,21.867,0.687,21.224,22.590,3
+rtt100_loss0,100.000,0.000,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,100.950,0.196,100.751,101.144,3
+rtt200_loss0,200.000,0.000,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,202.307,0.474,201.974,202.850,3
+rtt20_loss2,20.000,2.000,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,155.018,115.673,21.451,222.278,3
+rtt20_loss5,20.000,5.000,iter_step_ms,mail.example.lab | step 2: mail.example.lab. @ zone lab.,88.645,115.739,21.821,222.289,3
+rtt20_loss0,20.000,0.000,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,21.749,0.590,21.296,22.417,3
+rtt100_loss0,100.000,0.000,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,101.087,0.179,100.884,101.221,3
+rtt200_loss0,200.000,0.000,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,202.025,0.674,201.248,202.449,3
+rtt20_loss2,20.000,2.000,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,88.394,115.021,21.800,221.209,3
+rtt20_loss5,20.000,5.000,iter_step_ms,mail.example.lab | step 3: mail.example.lab. @ zone example.lab.,155.249,231.024,21.617,422.013,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,21.495,0.407,21.130,21.934,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,101.040,0.179,100.880,101.234,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,201.578,0.534,201.085,202.145,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,88.179,115.842,21.176,221.942,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.example.lab | step 1: www.example.lab. @ zone .,155.274,114.786,22.731,221.571,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,21.775,0.503,21.459,22.355,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,101.105,0.318,100.909,101.471,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,201.557,0.513,200.967,201.893,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,88.247,115.991,20.964,222.181,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.example.lab | step 2: www.example.lab. @ zone lab.,155.379,230.884,21.425,421.980,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,21.599,0.601,21.093,22.263,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,101.373,0.616,100.880,102.064,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,201.567,0.610,201.046,202.238,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,21.841,0.282,21.624,22.160,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.example.lab | step 3: www.example.lab. @ zone example.lab.,89.387,115.586,21.256,222.844,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,21.730,0.319,21.362,21.937,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,100.947,0.095,100.840,101.022,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,201.646,0.137,201.487,201.732,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,88.350,115.438,21.065,221.644,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 1: www.noglue.lab. @ zone .,21.620,0.224,21.403,21.851,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,21.690,0.404,21.257,22.057,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,101.383,1.084,100.729,102.634,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,202.147,0.976,201.552,203.273,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,21.594,0.515,21.052,22.077,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 2: www.noglue.lab. @ zone lab.,21.644,0.103,21.557,21.758,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,21.750,0.395,21.295,22.008,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,101.210,0.710,100.720,102.024,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,201.297,0.222,201.049,201.476,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,88.452,115.661,21.382,222.005,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 3: ns.example.lab. @ zone .,155.312,231.781,21.455,422.949,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,21.847,0.603,21.302,22.494,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,100.953,0.127,100.810,101.050,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,201.496,0.406,201.110,201.920,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,88.257,115.655,21.025,221.803,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 4: ns.example.lab. @ zone lab.,222.054,0.336,221.774,222.426,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,21.563,0.340,21.186,21.847,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,101.008,0.290,100.682,101.234,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,201.798,0.527,201.215,202.242,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,21.570,0.524,20.992,22.013,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 5: ns.example.lab. @ zone example.lab.,221.915,0.124,221.820,222.056,3
+rtt20_loss0,20.000,0.000,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,22.150,1.163,21.171,23.436,3
+rtt100_loss0,100.000,0.000,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,100.804,0.076,100.727,100.879,3
+rtt200_loss0,200.000,0.000,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,201.609,0.598,200.932,202.066,3
+rtt20_loss2,20.000,2.000,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,21.637,0.577,20.971,21.983,3
+rtt20_loss5,20.000,5.000,iter_step_ms,www.noglue.lab | step 6: www.noglue.lab. @ zone noglue.lab.,288.545,306.073,21.471,622.543,3
+rtt20_loss0,20.000,0.000,iter_total_ms,mail.example.lab,66.086,1.971,64.115,68.056,3
+rtt100_loss0,100.000,0.000,iter_total_ms,mail.example.lab,303.375,0.646,302.729,304.022,3
+rtt200_loss0,200.000,0.000,iter_total_ms,mail.example.lab,606.621,0.960,605.537,607.359,3
+rtt20_loss2,20.000,2.000,iter_total_ms,mail.example.lab,265.633,198.845,66.209,463.895,3
+rtt20_loss5,20.000,5.000,iter_total_ms,mail.example.lab,533.335,231.423,266.111,667.352,3
+rtt20_loss0,20.000,0.000,iter_total_ms,www.example.lab,65.489,1.709,64.167,67.419,3
+rtt100_loss0,100.000,0.000,iter_total_ms,www.example.lab,303.903,1.201,302.985,305.263,3
+rtt200_loss0,200.000,0.000,iter_total_ms,www.example.lab,605.328,1.815,603.483,607.112,3
+rtt20_loss2,20.000,2.000,iter_total_ms,www.example.lab,198.805,116.105,64.739,265.866,3
+rtt20_loss5,20.000,5.000,iter_total_ms,www.example.lab,400.651,231.621,264.661,668.092,3
+rtt20_loss0,20.000,0.000,iter_total_ms,www.noglue.lab,131.891,3.355,128.473,135.179,3
+rtt100_loss0,100.000,0.000,iter_total_ms,www.noglue.lab,606.896,2.227,604.965,609.332,3
+rtt200_loss0,200.000,0.000,iter_total_ms,www.noglue.lab,1211.866,2.884,1209.176,1214.912,3
+rtt20_loss2,20.000,2.000,iter_total_ms,www.noglue.lab,330.845,347.308,127.316,731.867,3
+rtt20_loss5,20.000,5.000,iter_total_ms,www.noglue.lab,934.435,528.140,538.536,1534.105,3
+rtt20_loss0,20.000,0.000,iter_wire_query_packets,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_wire_query_packets,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_wire_query_packets,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_wire_query_packets,mail.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss5,20.000,5.000,iter_wire_query_packets,mail.example.lab,3.333,0.577,3.000,4.000,3
+rtt20_loss0,20.000,0.000,iter_wire_query_packets,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt100_loss0,100.000,0.000,iter_wire_query_packets,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt200_loss0,200.000,0.000,iter_wire_query_packets,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss2,20.000,2.000,iter_wire_query_packets,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss5,20.000,5.000,iter_wire_query_packets,www.example.lab,3.000,0.000,3.000,3.000,3
+rtt20_loss0,20.000,0.000,iter_wire_query_packets,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt100_loss0,100.000,0.000,iter_wire_query_packets,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt200_loss0,200.000,0.000,iter_wire_query_packets,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss2,20.000,2.000,iter_wire_query_packets,www.noglue.lab,6.000,0.000,6.000,6.000,3
+rtt20_loss5,20.000,5.000,iter_wire_query_packets,www.noglue.lab,6.333,0.577,6.000,7.000,3
+rtt20_loss0,20.000,0.000,iter_wire_total_ms,mail.example.lab,63.621,1.663,61.983,65.308,3
+rtt100_loss0,100.000,0.000,iter_wire_total_ms,mail.example.lab,312.583,17.297,302.410,332.555,3
+rtt200_loss0,200.000,0.000,iter_wire_total_ms,mail.example.lab,604.576,1.351,603.613,606.120,3
+rtt20_loss2,20.000,2.000,iter_wire_total_ms,mail.example.lab,115.168,89.178,63.193,218.141,3
+rtt20_loss5,20.000,5.000,iter_wire_total_ms,mail.example.lab,400.770,580.435,63.233,1070.993,3
+rtt20_loss0,20.000,0.000,iter_wire_total_ms,www.example.lab,65.005,2.237,62.423,66.340,3
+rtt100_loss0,100.000,0.000,iter_wire_total_ms,www.example.lab,303.296,1.911,302.111,305.500,3
+rtt200_loss0,200.000,0.000,iter_wire_total_ms,www.example.lab,607.893,2.969,604.974,610.909,3
+rtt20_loss2,20.000,2.000,iter_wire_total_ms,www.example.lab,67.031,5.070,62.561,72.540,3
+rtt20_loss5,20.000,5.000,iter_wire_total_ms,www.example.lab,66.180,1.364,64.778,67.502,3
+rtt20_loss0,20.000,0.000,iter_wire_total_ms,www.noglue.lab,131.194,4.795,125.966,135.387,3
+rtt100_loss0,100.000,0.000,iter_wire_total_ms,www.noglue.lab,605.761,1.031,604.708,606.769,3
+rtt200_loss0,200.000,0.000,iter_wire_total_ms,www.noglue.lab,1212.062,2.549,1209.163,1213.950,3
+rtt20_loss2,20.000,2.000,iter_wire_total_ms,www.noglue.lab,129.789,3.034,126.615,132.662,3
+rtt20_loss5,20.000,5.000,iter_wire_total_ms,www.noglue.lab,463.675,579.581,127.721,1132.916,3
+rtt20_loss0,20.000,0.000,packets_before_first_response,do53,2.000,0.000,2.000,2.000,3
+rtt100_loss0,100.000,0.000,packets_before_first_response,do53,2.000,0.000,2.000,2.000,3
+rtt200_loss0,200.000,0.000,packets_before_first_response,do53,2.000,0.000,2.000,2.000,3
+rtt20_loss2,20.000,2.000,packets_before_first_response,do53,2.000,0.000,2.000,2.000,3
+rtt20_loss5,20.000,5.000,packets_before_first_response,do53,2.000,0.000,2.000,2.000,3
+rtt20_loss0,20.000,0.000,packets_before_first_response,doh,21.000,0.000,21.000,21.000,3
+rtt100_loss0,100.000,0.000,packets_before_first_response,doh,21.000,0.000,21.000,21.000,3
+rtt200_loss0,200.000,0.000,packets_before_first_response,doh,22.667,1.528,21.000,24.000,3
+rtt20_loss2,20.000,2.000,packets_before_first_response,doh,21.333,1.528,20.000,23.000,3
+rtt20_loss5,20.000,5.000,packets_before_first_response,doh,21.000,0.000,21.000,21.000,2
+rtt20_loss0,20.000,0.000,packets_before_first_response,dot,13.000,0.000,13.000,13.000,3
+rtt100_loss0,100.000,0.000,packets_before_first_response,dot,13.000,0.000,13.000,13.000,3
+rtt200_loss0,200.000,0.000,packets_before_first_response,dot,13.000,0.000,13.000,13.000,3
+rtt20_loss2,20.000,2.000,packets_before_first_response,dot,13.000,0.000,13.000,13.000,3
+rtt20_loss5,20.000,5.000,packets_before_first_response,dot,14.000,1.732,13.000,16.000,3
+rtt20_loss0,20.000,0.000,query_failures,do53,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,query_failures,do53,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,query_failures,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,query_failures,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,query_failures,do53,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,query_failures,doh,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,query_failures,doh,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,query_failures,doh,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,query_failures,doh,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,query_failures,doh,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,query_failures,dot,0.000,0.000,0.000,0.000,3
+rtt100_loss0,100.000,0.000,query_failures,dot,0.000,0.000,0.000,0.000,3
+rtt200_loss0,200.000,0.000,query_failures,dot,0.000,0.000,0.000,0.000,3
+rtt20_loss2,20.000,2.000,query_failures,dot,0.000,0.000,0.000,0.000,3
+rtt20_loss5,20.000,5.000,query_failures,dot,0.000,0.000,0.000,0.000,3
+rtt20_loss0,20.000,0.000,repeat_query_ms,do53,22.589,0.822,21.786,23.429,3
+rtt100_loss0,100.000,0.000,repeat_query_ms,do53,101.159,0.166,101.048,101.350,3
+rtt200_loss0,200.000,0.000,repeat_query_ms,do53,201.804,0.310,201.474,202.091,3
+rtt20_loss2,20.000,2.000,repeat_query_ms,do53,55.638,58.288,21.823,122.942,3
+rtt20_loss5,20.000,5.000,repeat_query_ms,do53,121.924,100.250,21.763,222.263,3
+rtt20_loss0,20.000,0.000,repeat_query_ms,doh,23.767,2.410,21.889,26.484,3
+rtt100_loss0,100.000,0.000,repeat_query_ms,doh,103.334,0.494,102.819,103.804,3
+rtt200_loss0,200.000,0.000,repeat_query_ms,doh,206.121,0.908,205.373,207.131,3
+rtt20_loss2,20.000,2.000,repeat_query_ms,doh,44.895,28.087,26.939,77.263,3
+rtt20_loss5,20.000,5.000,repeat_query_ms,doh,52.221,27.351,32.799,83.500,3
+rtt20_loss0,20.000,0.000,repeat_query_ms,dot,22.426,0.840,21.485,23.101,3
+rtt100_loss0,100.000,0.000,repeat_query_ms,dot,101.409,0.474,101.084,101.953,3
+rtt200_loss0,200.000,0.000,repeat_query_ms,dot,202.052,0.466,201.734,202.587,3
+rtt20_loss2,20.000,2.000,repeat_query_ms,dot,21.922,1.141,21.237,23.239,3
+rtt20_loss5,20.000,5.000,repeat_query_ms,dot,29.488,13.472,21.444,45.041,3

@@ -1,0 +1,9 @@
+# Generated per setup by the unbound container (private keys stay local)
+certs/
+__pycache__/
+*.pyc
+.venv/
+# macOS Finder metadata
+.DS_Store
+# Local editor/assistant settings
+.claude/

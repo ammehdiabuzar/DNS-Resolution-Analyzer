@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS Lab Dashboard</title>
+<style>
+/* ---------- tokens (chart colours validated with the dataviz palette checker) ---------- */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --raise: #f1f0ec;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781; --muted-text: #6b6a65;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,.12);
+  --do53: #2a78d6; --dot: #eb6834; --doh: #1baf7a;     /* categorical slots 1-3 */
+  --sub: #6250d6;                                     /* slot 7: missing-glue sub-lookup */
+  --good: #0ca30c; --good-text: #006300; --warn: #fab219; --warn-text: #8a5a00; --crit: #d03b3b;
+  --btn: #0b0b0b; --btn-ink: #ffffff;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --raise: #232321;
+    --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781; --muted-text: #9a988f;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,.12);
+    --do53: #3987e5; --dot: #d95926; --doh: #199e70;
+    --sub: #9085e9;
+    --good: #0ca30c; --good-text: #0ca30c; --warn: #fab219; --warn-text: #fab219; --crit: #d03b3b;
+    --btn: #f0efec; --btn-ink: #0b0b0b;
+  }
+}
+* { box-sizing: border-box; }
+html { font-size: 15px; }
+html.present { font-size: 18px; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 1rem/1.5 var(--sans); }
+.mono, code, pre { font-family: var(--mono); font-size: .87rem; }
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; min-height: 44px; border: 1px solid var(--muted); background: var(--surface); border-radius: 6px; padding: .35rem .8rem; }
+button:hover:not(:disabled) { border-color: var(--ink-2); }
+button:disabled, button[aria-disabled=true] { opacity: .45; cursor: not-allowed; }
+button.primary { background: var(--btn); color: var(--btn-ink); border-color: var(--btn); font-weight: 600; }
+input, select { min-height: 44px; background: var(--surface); border: 1px solid var(--muted); border-radius: 6px; padding: .3rem .55rem; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--ink-2); }
+.small { font-size: .82rem; }
+
+/* ---------- header ---------- */
+header { background: var(--surface); border-bottom: 1px solid var(--border); }
+.top { max-width: 1320px; margin: 0 auto; padding: .6rem 1rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.brand { margin-right: auto; display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+.brand h1 { font-size: 1.05rem; letter-spacing: -.01em; }
+.brand span { color: var(--ink-2); font-size: .85rem; }
+.status { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; padding: .2rem .6rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.status .ico { font-weight: 700; }
+details.health summary.status { min-height: 44px; }
+.stepper button { min-height: 44px; }
+.topo figcaption { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.topo figcaption button, .keys button { font-size: .78rem; padding: .2rem .6rem; white-space: nowrap; }
+.keys { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; }
+.status.ok .ico { color: var(--good-text); } .status.bad .ico { color: var(--crit); } .status.warn .ico { color: var(--warn-text); }
+.status.warn { border-color: var(--warn); }
+details.health { position: relative; }
+details.health summary { list-style: none; cursor: pointer; }
+details.health summary::-webkit-details-marker { display: none; }
+details.health ul { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; margin: 0; padding: .5rem .8rem; list-style: none;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px; min-width: 240px; font-size: .85rem; }
+details.health li { display: flex; justify-content: space-between; gap: 1rem; padding: .15rem 0; }
+nav[role=tablist] { max-width: 1320px; margin: 0 auto; padding: 0 1rem; display: flex; gap: .25rem; overflow-x: auto; }
+nav[role=tablist] button { min-height: 44px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: var(--ink-2); padding: .45rem .7rem; white-space: nowrap; }
+nav[role=tablist] button[aria-selected=true] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+
+main { max-width: 1320px; margin: 0 auto; padding: 1rem; }
+[role=tabpanel][hidden] { display: none; }
+.banner { padding: .6rem .9rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid var(--border); background: var(--surface); }
+.banner.err { border-color: var(--crit); } .banner.err::before { content: "✕ "; color: var(--crit); font-weight: 700; }
+
+/* ---------- live demo layout ---------- */
+.demo { display: grid; grid-template-columns: minmax(340px, 470px) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.rail { position: sticky; top: .75rem; display: grid; gap: .75rem; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+@media (max-width: 960px) { .demo { grid-template-columns: minmax(0, 1fr); } .rail { position: static; } }
+.demo > *, .grid2 > *, .multiples > * { min-width: 0; }
+
+/* topology */
+.topo { margin: 0; padding: .5rem .5rem .6rem; }
+.topo svg { width: 100%; height: auto; display: block; }
+.topo figcaption { font-size: .8rem; color: var(--ink-2); padding: 0 .35rem; min-height: 1.2em; }
+.t-link { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.t-link.on { stroke: var(--ink-2); stroke-width: 2; }
+.t-link.transit.impaired { stroke: var(--warn); stroke-width: 2.5; }
+.t-node rect { fill: var(--surface); stroke: var(--muted); stroke-width: 1; rx: 4; }
+.t-node.on rect { stroke: var(--ink); stroke-width: 1.5; fill: var(--raise); }
+.t-node .nm { font: 600 12px var(--sans); fill: var(--ink); }
+.t-node .ip { font: 10px var(--mono); fill: var(--ink-2); }
+.t-sub { font: 9.5px var(--mono); fill: var(--muted-text); }
+.t-netem { font: 600 10.5px var(--sans); fill: var(--ink-2); }
+.t-netem.impaired { fill: var(--warn-text); }
+.pkt { stroke: var(--surface); stroke-width: 2; }
+
+/* stepper */
+.stepper { list-style: none; margin: 0; padding: .35rem; }
+.stepper button { width: 100%; text-align: left; border: 0; background: none; border-radius: 6px; padding: .45rem .55rem;
+  display: grid; grid-template-columns: 1.6rem 1fr auto; gap: .1rem .55rem; align-items: center; }
+.stepper button:hover { background: var(--raise); }
+.stepper button[aria-current=step] { background: var(--raise); box-shadow: inset 2px 0 0 var(--ink); }
+.stepper .n { font: 600 .8rem var(--mono); color: var(--ink-2); }
+.stepper .t { font-weight: 600; font-size: .92rem; }
+.stepper .s { grid-column: 2 / 4; font-size: .8rem; color: var(--ink-2); font-family: var(--mono); min-height: 0; }
+.stepper .st { font-size: .8rem; font-weight: 700; }
+.stepper .st.done { color: var(--good-text); } .stepper .st.failed { color: var(--crit); }
+.stepper .st.running::after { content: ""; display: inline-block; width: .7rem; height: .7rem; border: 2px solid var(--grid); border-top-color: var(--ink); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.runall { padding: .7rem .8rem; display: grid; gap: .5rem; }
+.runall .row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.meter { height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--ink) 12%, transparent); overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--ink); width: 0; transition: width .3s; }
+.keys { font-size: .75rem; color: var(--ink-2); }
+.keys kbd { font-family: var(--mono); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3rem; font-size: .72rem; background: var(--surface); }
+
+/* stage */
+.stage-panel { padding: 1.1rem 1.25rem 1.4rem; }
+.stage-panel[hidden] { display: none; }
+.eyebrow { font: .78rem var(--mono); color: var(--ink-2); letter-spacing: .02em; }
+.stage-panel h2 { font-size: 1.45rem; letter-spacing: -.015em; margin: .1rem 0 .25rem; }
+.stage-panel .lede { color: var(--ink-2); max-width: 62ch; }
+.controls { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .9rem 0 .4rem; }
+.controls label { font-size: .85rem; color: var(--ink-2); }
+.runline { font: .8rem var(--mono); color: var(--ink-2); min-height: 1.3em; margin-bottom: .4rem; }
+.result { border-top: 1px solid var(--grid); padding-top: 1rem; margin-top: .4rem; }
+.result.stale { opacity: .45; }
+.result:empty { display: none; }
+.err-box { border: 1px solid var(--crit); border-radius: 6px; padding: .7rem .9rem; }
+.err-box::before { content: "✕  "; color: var(--crit); font-weight: 700; }
+
+/* figures */
+.hero { margin-bottom: 1rem; }
+.hero .v { font-size: 3.6rem; font-weight: 650; line-height: 1; letter-spacing: -.03em; }
+html.present .hero .v { font-size: 4.6rem; }
+.hero .v small { font-size: 1.4rem; font-weight: 500; letter-spacing: 0; margin-left: .3rem; color: var(--ink-2); }
+.hero p { margin-top: .4rem; color: var(--ink-2); max-width: 70ch; }
+.check { color: var(--good-text); font-weight: 600; } .cross { color: var(--crit); font-weight: 600; }
+.tiles { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.1rem; }
+.tile { border: 1px solid var(--grid); border-radius: 6px; padding: .45rem .8rem; min-width: 7.5rem; }
+.tile .l { font-size: .78rem; color: var(--ink-2); }
+.tile .v { font-size: 1.2rem; font-weight: 600; }
+h3.sec { font-size: .95rem; margin: 1.3rem 0 .55rem; }
+pre { background: var(--raise); border-radius: 6px; padding: .6rem .8rem; overflow-x: auto; margin: .3rem 0 0; }
+details.more { margin-top: .8rem; } details.more > summary { cursor: pointer; font-size: .85rem; color: var(--ink-2); line-height: 44px; }
+.cmd { margin-top: .9rem; font: .78rem var(--mono); color: var(--ink-2); word-break: break-all; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: .8rem; }
+
+/* resolution ladder */
+.ladder { border: 1px solid var(--grid); border-radius: 6px; overflow-x: auto; }
+.lr { display: grid; grid-template-columns: 2rem minmax(220px, 1fr) minmax(250px, 1.25fr) 4.5rem; gap: .75rem; align-items: center;
+  padding: .5rem .8rem; border-top: 1px solid var(--grid); min-width: 640px; }
+.lr.head { border-top: 0; font-size: .75rem; color: var(--ink-2); padding-top: .45rem; padding-bottom: .3rem; }
+.lr.sub { background: color-mix(in srgb, var(--sub) 7%, transparent); box-shadow: inset 3px 0 0 var(--sub); }
+.lr .i { font: .8rem var(--mono); color: var(--ink-2); }
+.lr .tm { text-align: right; font: .82rem var(--mono); font-variant-numeric: tabular-nums; }
+.lanes { position: relative; height: 22px; }
+.lanes .ln { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--grid); }
+.lanes .go { position: absolute; top: 6px; height: 2px; }
+.lanes .go::after { content: ""; position: absolute; right: -1px; top: -4px; border-left: 7px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+.lanes .back { position: absolute; top: 15px; height: 1px; opacity: .55; }
+.lane-names { position: relative; height: 1.1rem; }
+.lane-names span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.lane-names span:first-child { transform: none; }
+.what { font-size: .9rem; }
+.what .o { font-weight: 600; }
+.what .o.answer { color: var(--good-text); } .what .o.error { color: var(--crit); }
+.what .q { font: .76rem var(--mono); color: var(--ink-2); }
+.tag { display: inline-block; font-size: .72rem; border: 1px solid var(--border); border-radius: 4px; padding: 0 .35rem; margin-left: .3rem; color: var(--ink-2); vertical-align: 1px; }
+.tag .sw { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; background: var(--sub); margin-right: .25rem; vertical-align: 0; }
+.ev { padding: .35rem .8rem .35rem 3.6rem; font-size: .8rem; color: var(--ink-2); border-top: 1px solid var(--grid); min-width: 640px; }
+
+/* bar + dumbbell charts (HTML) */
+.legend { display: flex; flex-wrap: wrap; gap: .35rem 1rem; font-size: .82rem; color: var(--ink-2); margin: 0 0 .6rem; }
+.legend .k { display: inline-block; width: .7rem; height: .7rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+.legend .k.line { height: 2px; width: .9rem; border-radius: 1px; vertical-align: 3px; }
+.legend .k.ring { border-radius: 50%; background: var(--surface) !important; border: 2px solid var(--ink-2); }
+.legend .k.dotk { border-radius: 50%; background: var(--ink-2); }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1.2rem 1.6rem; }
+.chart-title { font-size: .85rem; font-weight: 600; margin-bottom: .45rem; }
+.chart-title span { font-weight: 400; color: var(--ink-2); }
+.hbars { display: grid; grid-template-columns: 3.4rem 1fr; row-gap: .55rem; column-gap: .6rem; align-items: center; }
+.hbars .lab { font-size: .85rem; font-weight: 600; }
+.hbars .lab i { display: inline-block; width: .6rem; height: .6rem; border-radius: 2px; margin-right: .35rem; }
+.trk { position: relative; height: 22px; }
+.area { position: absolute; left: 0; right: 4.6rem; top: 0; bottom: 0; }
+.gl { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--grid); }
+.gl.base { background: var(--axis); }
+.bar { position: absolute; top: 4px; height: 14px; border-radius: 0 4px 4px 0; min-width: 2px; }
+.bar::after { content: ""; position: absolute; inset: -5px -11px; }   /* 24px+ hit area */
+.db::after { inset: -6px; }
+.bar:hover, .bar:focus-visible, .db:hover, .db:focus-visible { filter: brightness(1.12); }
+.tip-val { position: absolute; top: 2px; font-size: .8rem; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.axis-row { display: grid; grid-template-columns: 3.4rem 1fr; column-gap: .6rem; margin-top: .3rem; }
+.axis-row .area { position: relative; height: 1rem; right: auto; margin-right: 4.6rem; }
+.axis-row .area span { position: absolute; transform: translateX(-50%); font-size: .72rem; color: var(--muted-text); font-variant-numeric: tabular-nums; }
+.db { position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 50%; transform: translateX(-50%); border: 2px solid var(--surface); }
+.db.before { background: var(--surface); border: 2px solid; }
+.dbl { position: absolute; top: 10px; height: 2px; opacity: .5; }
+
+/* SVG line charts */
+.lc svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lc .gridline { stroke: var(--grid); stroke-width: 1; }
+.lc .baseline { stroke: var(--axis); stroke-width: 1; }
+.lc .tick { font: 10.5px var(--sans); fill: var(--muted-text); }
+.lc .endlab { font: 11px var(--sans); fill: var(--ink-2); }
+.lc .series { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.lc .mk { stroke: var(--surface); stroke-width: 2; }
+.lc .xhair { stroke: var(--ink-2); stroke-width: 1; }
+.lc svg:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+table.t { border-collapse: collapse; width: 100%; font-size: .82rem; }
+table.t th, table.t td { border-bottom: 1px solid var(--grid); padding: .35rem .5rem; text-align: left; vertical-align: top; }
+table.t th { font-weight: 600; background: var(--raise); }
+table.t td.num { font-variant-numeric: tabular-nums; text-align: right; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--grid); border-radius: 6px; margin-top: .5rem; }
+
+#tip { position: fixed; z-index: 50; pointer-events: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: .45rem .6rem; font-size: .8rem; box-shadow: 0 4px 14px rgba(0,0,0,.12); max-width: 300px; }
+#tip .h { color: var(--ink-2); margin-bottom: .2rem; }
+#tip .r { display: flex; align-items: center; gap: .45rem; }
+#tip .r b { font-variant-numeric: tabular-nums; }
+#tip .r i { display: inline-block; width: .8rem; height: 2px; border-radius: 1px; }
+#tip .r span { color: var(--ink-2); }
+
+/* saved results / evidence */
+.page-head { margin: .2rem 0 1rem; }
+.page-head h2 { font-size: 1.3rem; }
+.chart-card { padding: 1rem 1.1rem; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: .8rem; }
+.shot { padding: 0; overflow: hidden; text-align: left; background: var(--surface); }
+.shot img { width: 100%; height: 160px; object-fit: contain; background: #fff; display: block; border-bottom: 1px solid var(--grid); }
+.shot div { padding: .45rem .65rem; font-size: .84rem; }
+.shot div span { display: block; font: .74rem var(--mono); color: var(--ink-2); }
+dialog { border: 1px solid var(--border); border-radius: 8px; padding: 0; max-width: 96vw; max-height: 94vh; background: var(--surface); color: var(--ink); }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+dialog img { max-width: 96vw; max-height: 84vh; display: block; background: #fff; }
+dialog .bar-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .5rem .8rem; font-size: .85rem; }
+.arch { background: #fff; border-radius: 8px; border: 1px solid var(--border); padding: .5rem; }
+.arch img { width: 100%; display: block; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="brand"><h1>DNS Resolution Analyzer</h1><span>Project 17 · live proof of concept</span></div>
+    <details class="health" id="health"><summary class="status" id="health-sum"><span class="ico">…</span> checking lab</summary><ul id="health-list"></ul></details>
+    <span class="status" id="netem-badge"><span class="ico">·</span> netem</span>
+    <button id="start-btn" hidden>Start lab</button>
+    <button id="present-btn" aria-pressed="false" title="Larger text for a projector (P)">Presenter mode</button>
+  </div>
+  <nav role="tablist" aria-label="Sections">
+    <button role="tab" id="t-demo" aria-controls="p-demo" aria-selected="true">Live demo</button>
+    <button role="tab" id="t-results" aria-controls="p-results" aria-selected="false" tabindex="-1">Saved results</button>
+    <button role="tab" id="t-evidence" aria-controls="p-evidence" aria-selected="false" tabindex="-1">Wireshark evidence</button>
+    <button role="tab" id="t-arch" aria-controls="p-arch" aria-selected="false" tabindex="-1">Architecture</button>
+  </nav>
+</header>
+
+<main>
+  <div id="banner"></div>
+
+  <section role="tabpanel" id="p-demo" aria-labelledby="t-demo">
+    <div class="demo">
+      <aside class="rail">
+        <figure class="topo panel">
+          <svg id="topo" viewBox="0 0 442 240" role="img" aria-label="Lab topology: client, routers R2 and R1, the DNS hierarchy and Unbound"></svg>
+          <figcaption><span id="topo-cap">The lab: every query crosses the R2–R1 transit link.</span><button id="replay-toggle" aria-pressed="true" title="Packet replay animation">Replay: on</button></figcaption>
+        </figure>
+        <nav class="panel" aria-label="Demo steps"><ol class="stepper" id="stepper"></ol>
+          <div class="runall">
+            <div class="row"><button class="primary" id="runall-btn">Run full demo</button><span class="small muted" id="prog-text"></span></div>
+            <div class="meter" id="prog" hidden><span></span></div>
+            <div class="keys"><span id="keys-help"><kbd>↑</kbd><kbd>↓</kbd> choose step · <kbd>R</kbd> run · <kbd>Shift</kbd>+<kbd>A</kbd> run all · <kbd>P</kbd> presenter</span><button id="keys-toggle" aria-pressed="true">Shortcuts: on</button></div>
+          </div>
+        </nav>
+      </aside>
+      <div class="panel" id="stage"></div>
+    </div>
+  </section>
+
+  <section role="tabpanel" id="p-results" aria-labelledby="t-results" hidden><p class="muted">Loading saved results…</p></section>
+  <section role="tabpanel" id="p-evidence" aria-labelledby="t-evidence" hidden><p class="muted">Loading screenshots…</p></section>
+  <section role="tabpanel" id="p-arch" aria-labelledby="t-arch" hidden>
+    <div class="page-head"><h2>Architecture</h2><p class="muted">Subnets, addresses, ports, routers/switches and the communication flows (docs/architecture.svg).</p></div>
+    <div class="arch"><img src="/files/docs/architecture.svg" alt="Lab architecture diagram with addressing plan and flows"></div>
+  </section>
+</main>
+
+<div id="tip" role="tooltip" hidden></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<dialog id="viewer" aria-labelledby="viewer-cap"><img alt=""><div class="bar-row"><span id="viewer-cap"></span><button id="viewer-close">Close</button></div></dialog>
+
+<script>
+/* =================================================================== helpers */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const num = v => v === 0 ? "0" : v < 0.1 ? "<0.1" : v < 10 ? v.toFixed(1) : Math.round(v).toLocaleString();
+const ms = v => num(v) + " ms";
+const signed = v => (v < 0 ? "−" : "+") + ms(Math.abs(v));
+const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+const sleep = t => new Promise(r => setTimeout(r, t));
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const T = [{key: "do53", name: "Do53", c: "var(--do53)"}, {key: "dot", name: "DoT", c: "var(--dot)"}, {key: "doh", name: "DoH", c: "var(--doh)"}];
+let busy = false, current = 0, baseline = null, lastNetem = null;
+const say = text => { $("#live").textContent = text; };
+
+async function api(name, body) {
+  const opt = body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {};
+  const r = await fetch("/api/" + name, opt);
+  const data = await r.json().catch(() => ({error: "bad response from the dashboard server"}));
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+}
+function banner(text) { $("#banner").innerHTML = text ? `<div class="banner err">${esc(text)}</div>` : ""; }
+
+/* tooltip: values lead, labels follow; text inserted with textContent */
+function showTip(x, y, head, rows) {
+  const tip = $("#tip"); tip.replaceChildren();
+  if (head) { const h = document.createElement("div"); h.className = "h"; h.textContent = head; tip.append(h); }
+  for (const r of rows) {
+    const d = document.createElement("div"); d.className = "r";
+    if (r.color) { const i = document.createElement("i"); i.style.background = r.color; d.append(i); }
+    const b = document.createElement("b"); b.textContent = r.value; d.append(b);
+    const s = document.createElement("span"); s.textContent = r.label; d.append(s);
+    tip.append(d);
+  }
+  tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(innerWidth - w - 8, x + 14) + "px";
+  tip.style.top = Math.max(8, y - h - 10) + "px";
+}
+let tipTimer = null;
+const hideTip = () => { clearTimeout(tipTimer); $("#tip").hidden = true; };
+const hideTipSoon = () => { clearTimeout(tipTimer); tipTimer = setTimeout(hideTip, 300); };
+$("#tip").addEventListener("pointerenter", () => clearTimeout(tipTimer));
+$("#tip").addEventListener("pointerleave", hideTip);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#tip").hidden) { hideTip(); e.stopPropagation(); } }, true);
+function bindTip(el, head, rows) {
+  el.tabIndex = 0;
+  el.setAttribute("role", "img");
+  el.setAttribute("aria-label", `${head}: ${rows.map(r => `${r.value} ${r.label}`).join(", ")}`);
+  const show = e => { const b = el.getBoundingClientRect(); showTip(e.clientX ?? b.right, e.clientY ?? b.top, head, rows); };
+  el.addEventListener("pointermove", show); el.addEventListener("focus", show);
+  el.addEventListener("pointerleave", hideTipSoon); el.addEventListener("blur", hideTip);
+}
+function niceStep(x) { const p = 10 ** Math.floor(Math.log10(x)); for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= x) return m * p; return 10 * p; }
+function axis(max) { const step = niceStep(Math.max(max, 0.4) / 4); const top = Math.ceil(max / step) * step || step; const ticks = []; for (let v = 0; v <= top + 1e-9; v += step) ticks.push(+v.toFixed(6)); return {top, ticks}; }
+function tableView(head, rows) {
+  return `<details class="more"><summary>Table view</summary><div class="tablewrap"><table class="t"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></details>`;
+}
+
+/* =================================================================== topology */
+const N = {
+  client: {x: 42, y: 118, w: 76, nm: "client", ip: "10.10.3.10"},
+  r2: {x: 142, y: 118, w: 72, nm: "R2", ip: ".3.1  .2.2"},
+  r1: {x: 268, y: 118, w: 100, nm: "R1", ip: ".2.1  .1.1  .4.1"},
+  root: {x: 396, y: 38, w: 84, nm: "root (.)", ip: "10.10.1.10"},
+  tld: {x: 396, y: 118, w: 84, nm: "TLD (.lab)", ip: "10.10.1.11"},
+  auth: {x: 396, y: 198, w: 84, nm: "auth", ip: "10.10.1.12"},
+  unbound: {x: 268, y: 206, w: 92, nm: "Unbound", ip: "10.10.4.10"},
+};
+const BUSX = 340, H2 = n => n.w / 2;
+const IP_NODE = {"10.10.1.10": "root", "10.10.1.11": "tld", "10.10.1.12": "auth", "10.10.4.10": "unbound"};
+function drawTopo() {
+  const s = [], L = (id, d, cls = "") => s.push(`<path id="${id}" class="t-link ${cls}" d="${d}"/>`);
+  L("l-c", `M${N.client.x + H2(N.client)} 118 H${N.r2.x - H2(N.r2)}`);
+  L("l-b", `M${N.r2.x + H2(N.r2)} 118 H${N.r1.x - H2(N.r1)}`, "transit");
+  L("l-a", `M${N.r1.x + H2(N.r1)} 118 H${BUSX}`);
+  L("l-bus", `M${BUSX} 38 V198`);
+  for (const k of ["root", "tld", "auth"]) L("l-" + k, `M${BUSX} ${N[k].y} H${N[k].x - H2(N[k])}`);
+  L("l-d", `M${N.r1.x} 135 V${N.unbound.y - 17}`);
+  const mid = (N.r2.x + H2(N.r2) + N.r1.x - H2(N.r1)) / 2;
+  s.push(`<text class="t-sub" x="${N.client.x - H2(N.client)}" y="150">C · 10.10.3.0/24</text>`,
+         `<text class="t-sub" x="${BUSX}" y="232" text-anchor="middle">A · 10.10.1.0/24 · switch</text>`,
+         `<text class="t-sub" x="${N.r1.x + 6}" y="170">D · 10.10.4.0/24</text>`,
+         `<text class="t-sub" x="${mid}" y="132" text-anchor="middle">B</text>`,
+         `<text id="t-netem" class="t-netem" x="${mid}" y="88" text-anchor="middle">netem off</text>`);
+  for (const [id, n] of Object.entries(N)) {
+    s.push(`<g class="t-node" id="n-${id}"><rect x="${n.x - n.w / 2}" y="${n.y - 17}" width="${n.w}" height="34"/>
+      <text class="nm" x="${n.x}" y="${n.y - 2}" text-anchor="middle">${esc(n.nm)}</text>
+      <text class="ip" x="${n.x}" y="${n.y + 11}" text-anchor="middle">${esc(n.ip)}</text></g>`);
+  }
+  s.push(`<g id="pkts"></g>`);
+  $("#topo").innerHTML = s.join("");
+}
+function topoFocus(nodes = [], links = []) {
+  $$(".t-node").forEach(g => g.classList.toggle("on", nodes.includes(g.id.slice(2))));
+  $$(".t-link").forEach(p => p.classList.toggle("on", links.includes(p.id.slice(2))));
+}
+function routeTo(target) {
+  const p = [[N.client.x, 118], [N.r2.x, 118], [N.r1.x, 118]];
+  if (target === "unbound") return [...p, [N.r1.x, N.unbound.y - 17]];
+  return [...p, [BUSX, 118], [BUSX, N[target].y], [N[target].x - H2(N[target]), N[target].y]];
+}
+const linksTo = t => t === "unbound" ? ["c", "b", "d"] : ["c", "b", "a", "bus", t];
+let replayOn = !reduceMotion;
+function packet(points, color, dur) {
+  if (!replayOn) return Promise.resolve();
+  const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  c.setAttribute("r", 4.5); c.setAttribute("class", "pkt"); c.setAttribute("fill", color);
+  $("#pkts").append(c);
+  const seg = points.slice(1).map((pt, i) => Math.hypot(pt[0] - points[i][0], pt[1] - points[i][1]));
+  const total = seg.reduce((a, b) => a + b, 0);
+  return new Promise(res => {
+    const t0 = performance.now();
+    const frame = now => {
+      let d = Math.min(1, (now - t0) / dur) * total, i = 0;
+      while (i < seg.length - 1 && d > seg[i]) { d -= seg[i]; i++; }
+      const f = seg[i] ? d / seg[i] : 1, a = points[i], b = points[i + 1];
+      c.setAttribute("cx", a[0] + (b[0] - a[0]) * f); c.setAttribute("cy", a[1] + (b[1] - a[1]) * f);
+      if (now - t0 < dur && replayOn) requestAnimationFrame(frame); else { c.remove(); res(); }
+    };
+    requestAnimationFrame(frame);
+  });
+}
+async function replayResolution(d) {
+  const n = d.steps.length;
+  for (const s of d.steps) {
+    if (!replayOn) break;
+    const target = IP_NODE[s.server_ip] || "auth";
+    $("#topo-cap").textContent = `Replay ${s.index}/${n}: ${s.qname} ${s.qtype} → ${N[target].nm.split(" ")[0]} (${s.server_ip}) — ${s.outcome}${s.depth ? ", sub-lookup" : ""}. Not to scale.`;
+    topoFocus(["client", "r2", "r1", target], linksTo(target));
+    const route = routeTo(target), qc = s.depth ? "var(--sub)" : "var(--ink-2)";
+    await packet(route, qc, 420);
+    await packet([...route].reverse(), s.outcome === "answer" ? "var(--good)" : s.outcome === "referral" ? "var(--ink-2)" : s.outcome === "cname" ? "var(--sub)" : "var(--crit)", 420);
+  }
+  $("#topo-cap").textContent = `${d.qname} ${d.qtype}: ${d.queries} queries, ${ms(d.total_ms)} in real time.`;
+}
+async function replayTransports() {
+  topoFocus(["client", "r2", "r1", "unbound"], linksTo("unbound"));
+  $("#topo-cap").textContent = "Do53, DoT and DoH all go client → R2 → R1 → Unbound (10.10.4.10).";
+  for (const t of T) { if (!replayOn) break; const r = routeTo("unbound"); await packet(r, t.c, 380); await packet([...r].reverse(), t.c, 380); }
+}
+function showNetem(n) {
+  lastNetem = n;
+  const on = n && (n.rtt_ms || n.loss_pct);
+  const b = $("#netem-badge");
+  b.className = "status " + (on ? "warn" : "");
+  b.innerHTML = on ? `<span class="ico">⚠</span> netem +${n.rtt_ms} ms RTT · ${n.loss_pct}% loss` : `<span class="ico">·</span> netem off`;
+  const t = $("#t-netem");
+  if (t) { t.textContent = on ? `+${n.rtt_ms} ms · ${n.loss_pct}% loss` : "netem off"; t.classList.toggle("impaired", !!on); }
+  $("#l-b")?.classList.toggle("impaired", !!on);
+}
+
+/* =================================================================== renderers */
+const hero = (v, unit, caption) => `<div class="hero"><div class="v">${v}${unit ? `<small>${esc(unit)}</small>` : ""}</div><p>${caption}</p></div>`;
+const tiles = list => `<div class="tiles">${list.map(t => `<div class="tile"><div class="l">${esc(t.l)}</div><div class="v">${t.v}</div></div>`).join("")}</div>`;
+const LANE = {"10.10.1.10": 1, "10.10.1.11": 2, "10.10.1.12": 3};
+const LX = [3, 36, 67, 97];
+function ladder(d) {
+  let h = `<div class="lr head" aria-hidden="true"><div>#</div><div class="lane-names"><span style="left:${LX[0]}%">client</span><span style="left:${LX[1]}%">root</span><span style="left:${LX[2]}%">TLD</span><span style="left:${LX[3]}%">auth</span></div><div>what came back</div><div style="text-align:right">time</div></div>`;
+  let depth = 0;
+  for (const s of d.steps) {
+    if (s.depth > depth) h += `<div class="ev" role="listitem">↳ No glue for the nameserver, so the resolver first looks up <b class="mono">${esc(s.qname)}</b> itself.</div>`;
+    if (s.depth < depth) h += `<div class="ev" role="listitem">↲ Nameserver address found — back to the original question.</div>`;
+    depth = s.depth;
+    const x = LX[LANE[s.server_ip] || 3];
+    const col = s.outcome === "answer" ? "var(--good)" : s.outcome === "referral" ? "var(--ink-2)" : s.outcome === "cname" ? "var(--sub)" : "var(--crit)";
+    const label = {referral: "↪ Referral", answer: "✓ Answer", cname: "⤳ Alias (CNAME)", nxdomain: "✕ No such name", nodata: "∅ No data"}[s.outcome] || "✕ " + s.outcome;
+    const tags = (s.depth ? `<span class="tag"><i class="sw"></i>sub-lookup</span>` : "") +
+      (s.transport !== "udp" ? `<span class="tag">TC=1 → retried over TCP 53</span>` : "") +
+      (s.attempts > 1 ? `<span class="tag">${s.attempts} UDP attempts</span>` : "");
+    h += `<div class="lr ${s.depth ? "sub" : ""}" role="listitem"><div class="i"><span class="sr-only">Query </span>${s.index}</div>
+      <div class="lanes" aria-hidden="true">${LX.map(p => `<span class="ln" style="left:${p}%"></span>`).join("")}
+        <span class="go" style="left:${LX[0]}%;width:calc(${x - LX[0]}% - 1px);background:${col};color:${col}"></span>
+        <span class="back" style="left:${LX[0]}%;width:${x - LX[0]}%;background:${col}"></span></div>
+      <div class="what"><span class="o ${s.outcome}">${label}</span>${tags}<div>${esc(s.detail)}</div>
+        <div class="q">${esc(s.qname)} ${esc(s.qtype)} → ${esc(s.server_name)} ${esc(s.server_ip)}</div></div>
+      <div class="tm">${ms(s.rtt_ms)}</div></div>`;
+  }
+  return `<div class="ladder" role="list" aria-label="Queries sent by the resolver, in order">${h}</div>`;
+}
+function answerBlock(d) {
+  return `<h3 class="sec">Answer</h3><pre>${d.answers.length ? d.answers.map(esc).join("\n") : "(none)"}</pre><div class="cmd">$ ${esc(d.command)}</div>`;
+}
+/* thin horizontal bars, values at the tips, shared scale across panels */
+function hbars(rows, ax, fmt = ms) {
+  const pct = v => 100 * v / ax.top;
+  const body = rows.map(r => `<div class="lab"><i style="background:${r.c}"></i>${esc(r.name)}</div>
+    <div class="trk">${ax.ticks.map((t, i) => `<span class="gl ${i ? "" : "base"}" style="left:${pct(t)}%"></span>`).join("").replace(/^/, `<div class="area">`)}
+      <span class="bar" data-tip="${esc(r.tipId)}" style="width:${pct(r.v)}%;background:${r.c}"></span>
+      <span class="tip-val" style="left:calc(${pct(r.v)}% + 6px)">${fmt(r.v)}</span></div></div>`).join("");
+  const axisRow = `<div class="axis-row"><i></i><div class="area">${ax.ticks.map(t => `<span style="left:${pct(t)}%">${num(t)}</span>`).join("")}</div></div>`;
+  return `<div class="hbars">${body}</div>${axisRow}`;
+}
+function bindBarTips(root, tips) { $$(".bar[data-tip]", root).forEach(b => { const t = tips[b.dataset.tip]; if (t) bindTip(b, t.head, t.rows); }); }
+function transportChart(d) {
+  const m = {}; for (const t of T) m[t.key] = {f: mean(d.transports[t.key].first_ms), r: mean(d.transports[t.key].repeat_ms), d: d.transports[t.key]};
+  const ax = axis(Math.max(...T.map(t => m[t.key].f)));
+  const tips = {};
+  const rows = kind => T.map(t => {
+    const id = t.key + kind, arr = kind === "f" ? m[t.key].d.first_ms : m[t.key].d.repeat_ms;
+    tips[id] = {head: `${t.name} · ${kind === "f" ? "first query (new connection)" : "repeat query (open connection)"}`,
+      rows: [{value: ms(mean(arr)), label: "mean", color: t.c}, {value: `${ms(Math.min(...arr))} – ${ms(Math.max(...arr))}`, label: `range of ${arr.length} samples`}]};
+    return {name: t.name, v: m[t.key][kind], c: t.c, tipId: id};
+  });
+  const html = `<div class="legend">${T.map(t => `<span><i class="k" style="background:${t.c}"></i>${t.name}</span>`).join("")}<span>· ${d.n} samples each, same scale in both panels</span></div>
+    <div class="multiples"><div><div class="chart-title">First query <span>— new connection, handshakes included</span></div>${hbars(rows("f"), ax)}</div>
+    <div><div class="chart-title">Repeat query <span>— connection already open</span></div>${hbars(rows("r"), ax)}</div></div>
+    ${tableView(["Transport", "First query (mean)", "Repeat query (mean)", "Samples"], T.map(t => [t.name, ms(m[t.key].f), ms(m[t.key].r), String(d.n)]))}`;
+  return {html, tips, m};
+}
+/* dumbbell: before (ring) -> after (dot), one hue per transport */
+function dumbbell(base, now, label) {
+  const b = {}, a = {}; for (const t of T) { b[t.key] = mean(base.transports[t.key].first_ms); a[t.key] = mean(now.transports[t.key].first_ms); }
+  const ax = axis(Math.max(...Object.values(a), ...Object.values(b)));
+  const pct = v => 100 * v / ax.top, tips = {};
+  const body = T.map(t => {
+    tips[t.key] = {head: `${t.name} · first query`, rows: [{value: ms(a[t.key]), label, color: t.c}, {value: ms(b[t.key]), label: "no impairment"}, {value: signed(a[t.key] - b[t.key]), label: "difference"}]};
+    const lo = Math.min(b[t.key], a[t.key]);
+    return `<div class="lab"><i style="background:${t.c}"></i>${t.name}</div><div class="trk"><div class="area">
+      ${ax.ticks.map((v, i) => `<span class="gl ${i ? "" : "base"}" style="left:${pct(v)}%"></span>`).join("")}
+      <span class="dbl" style="left:${pct(lo)}%;width:${pct(Math.abs(a[t.key] - b[t.key]))}%;background:${t.c}"></span>
+      <span class="db before" style="left:${pct(b[t.key])}%;border-color:${t.c}"></span>
+      <span class="db bar" data-tip="${t.key}" style="left:${pct(a[t.key])}%;background:${t.c}"></span>
+      <span class="tip-val" style="left:calc(${pct(a[t.key])}% + 12px)">${ms(a[t.key])}</span></div></div>`;
+  }).join("");
+  const html = `<div class="legend"><span><i class="k ring"></i>no impairment</span><span><i class="k dotk"></i>${esc(label)}</span>${T.map(t => `<span><i class="k" style="background:${t.c}"></i>${t.name}</span>`).join("")}</div>
+    <div class="hbars">${body}</div><div class="axis-row"><i></i><div class="area">${ax.ticks.map(v => `<span style="left:${pct(v)}%">${num(v)}</span>`).join("")}</div></div>
+    ${tableView(["Transport", "No impairment", label, "Difference"], T.map(t => [t.name, ms(b[t.key]), ms(a[t.key]), signed(a[t.key] - b[t.key])]))}`;
+  return {html, tips, a, b};
+}
+/* SVG line chart with crosshair + keyboard; series = [{name, c, pts:[{x,y,sd,min,max}]}] */
+function lineChart(el, {series, xLabel, xs, yMax, yLabel, title}) {
+  const W = 520, H = 250, m = {l: 44, r: 92, t: 14, b: 34};
+  const ax = axis(yMax ?? Math.max(...series.flatMap(s => s.pts.map(p => p.y))));
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const X = v => m.l + (W - m.l - m.r) * (x1 === x0 ? .5 : (v - x0) / (x1 - x0));
+  const Y = v => H - m.b - (H - m.t - m.b) * v / ax.top;
+  let s = ax.ticks.map((t, i) => `<line class="${i ? "gridline" : "baseline"}" x1="${m.l}" x2="${W - m.r}" y1="${Y(t)}" y2="${Y(t)}"/><text class="tick" x="${m.l - 6}" y="${Y(t) + 3.5}" text-anchor="end">${num(t)}</text>`).join("");
+  s += xs.map(v => `<text class="tick" x="${X(v)}" y="${H - m.b + 15}" text-anchor="middle">${esc(xLabel(v))}</text>`).join("");
+  s += `<text class="tick" x="${m.l - 6}" y="${m.t - 4}" text-anchor="end">${esc(yLabel)}</text>`;
+  for (const se of series) {
+    s += `<path class="series" stroke="${se.c}" d="${se.pts.map((p, i) => (i ? "L" : "M") + X(p.x) + " " + Y(p.y)).join(" ")}"/>`;
+    s += se.pts.map(p => `<circle class="mk" r="4" cx="${X(p.x)}" cy="${Y(p.y)}" fill="${se.c}"/>`).join("");
+  }
+  /* end labels only when they do not collide (else legend + tooltip carry identity) */
+  const ends = series.map(se => ({se, y: Y(se.pts[se.pts.length - 1].y)})).sort((a, b) => a.y - b.y);
+  if (ends.every((e, i) => !i || e.y - ends[i - 1].y >= 13))
+    s += ends.map(e => `<text class="endlab" x="${W - m.r + 8}" y="${e.y + 4}">${esc(e.se.name)} ${num(e.se.pts[e.se.pts.length - 1].y)}</text>`).join("");
+  s += `<line class="xhair" y1="${m.t}" y2="${H - m.b}" visibility="hidden"/><rect x="${m.l - 20}" y="${m.t}" width="${W - m.l - m.r + 40}" height="${H - m.t - m.b}" fill="transparent" class="hit"/>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" tabindex="0" role="img" aria-label="${esc(title)} (${esc(yLabel)}): ${esc(series.map(se => se.name).join(", "))}. Use the left and right arrow keys to read values; a table view follows.">${s}</svg>`;
+  const svg = $("svg", el), xh = $(".xhair", el);
+  let idx = -1;
+  const show = (i, cx, cy, announce) => {
+    idx = i; xh.setAttribute("x1", X(xs[i])); xh.setAttribute("x2", X(xs[i])); xh.setAttribute("visibility", "visible");
+    const rows = series.map(se => ({se, p: se.pts.find(p => p.x === xs[i])})).filter(r => r.p).sort((a, b) => b.p.y - a.p.y)
+      .map(r => ({color: r.se.c, value: ms(r.p.y), label: `${r.se.name}${r.p.sd != null ? ` ± ${num(r.p.sd)}` : ""}${r.p.min != null ? ` · ${num(r.p.min)}–${num(r.p.max)}` : ""}`}));
+    showTip(cx, cy, xLabel(xs[i]), rows);
+    if (announce) say(`${xLabel(xs[i])}: ${rows.map(r => `${r.label.split(" ")[0]} ${r.value}`).join(", ")}`);
+  };
+  svg.addEventListener("pointermove", e => {
+    const b = svg.getBoundingClientRect(), vx = (e.clientX - b.left) * W / b.width;
+    let best = 0; xs.forEach((v, i) => { if (Math.abs(X(v) - vx) < Math.abs(X(xs[best]) - vx)) best = i; });
+    show(best, e.clientX, e.clientY);
+  });
+  const off = () => { xh.setAttribute("visibility", "hidden"); hideTip(); };
+  svg.addEventListener("pointerleave", () => { xh.setAttribute("visibility", "hidden"); hideTipSoon(); }); svg.addEventListener("blur", off);
+  svg.addEventListener("keydown", e => {
+    if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+    e.preventDefault(); const i = Math.max(0, Math.min(xs.length - 1, idx + (e.key === "ArrowRight" ? 1 : -1)));
+    const b = svg.getBoundingClientRect(); show(i, b.left + b.width * X(xs[i]) / W, b.top + 20, true);
+  });
+}
+const legendFor = series => `<div class="legend">${series.map(se => `<span><i class="k line" style="background:${se.c}"></i>${esc(se.name)}</span>`).join("")}</div>`;
+
+/* =================================================================== steps */
+const STEPS = [
+  {key: "topology", title: "Topology check", action: "Trace the route",
+   lede: "Routing tables on R1 and R2, and a traceroute from the client to the root server across both routers.",
+   async run() {
+     const d = await api("topology", {});
+     const ok = d.hops.length === 3 && d.hops[0].ip === "10.10.3.1" && d.hops[1].ip === "10.10.2.1";
+     const path = ["client 10.10.3.10", ...d.hops.map(h => `${h.name || "hop"} ${h.ip}`)].join("  →  ");
+     return {
+       html: hero(d.hops.length, d.hops.length === 1 ? "hop" : "hops", `${ok ? '<span class="check">✓ Matches the addressing plan.</span> ' : '<span class="cross">✕ Unexpected path.</span> '}<span class="mono">${esc(path)}</span>`) +
+         tiles(d.hops.map(h => ({l: `hop ${h.hop} · ${h.name}`, v: `<span class="mono" style="font-size:.95rem">${esc(h.ip)}</span> <span class="muted small">${ms(h.ms)}</span>`}))) +
+         `<div class="cols"><div><h3 class="sec">R1 routing table</h3><pre>${esc(d.routes.r1)}</pre></div><div><h3 class="sec">R2 routing table</h3><pre>${esc(d.routes.r2)}</pre></div></div>
+          <details class="more"><summary>Raw traceroute</summary><pre>${esc(d.traceroute)}</pre></details><div class="cmd">$ docker exec client traceroute -n 10.10.1.10</div>`,
+       summary: `${d.hops.length} hops · via R2, R1`,
+       async after() {
+         $("#topo-cap").textContent = "traceroute: client → R2 → R1 → root server.";
+         topoFocus(["client", "r2", "r1", "root"], linksTo("root"));
+         const r = routeTo("root"); await packet(r, "var(--ink-2)", 900); await packet([...r].reverse(), "var(--good)", 700);
+       },
+     };
+   }},
+  {key: "resolve", title: "Iterative resolution", action: "Resolve",
+   lede: "Our raw-packet resolver starts at the root and follows each referral down to the authoritative server. Try any test name.",
+   controls: `<label for="q-name">Name</label><input id="q-name" value="www.example.lab" size="17" spellcheck="false"><label for="q-type">Type</label><select id="q-type"><option>A</option><option>MX</option><option>NS</option><option>TXT</option><option>CNAME</option><option>SOA</option><option>AAAA</option></select>`,
+   async run() {
+     const d = await api("resolve", {name: $("#q-name").value, qtype: $("#q-type").value});
+     return resolutionView(d, `${esc(d.qname)} ${esc(d.qtype)} → <span class="mono">${esc(d.answers.map(a => a.split(/\s+/).slice(4).join(" ")).join(", ") || d.rcode)}</span>`);
+   }},
+  {key: "verify", title: "Correctness vs dig +trace", action: "Check 7 names",
+   lede: "Each test name is resolved by our resolver and by dig +trace from the same root. The answer sets must be identical.",
+   async run() {
+     const d = await api("verify", {});
+     const good = d.rows.filter(r => r.ok).length;
+     const rows = d.rows.map(r => `<tr><td>${r.ok ? '<span class="check">✓ same</span>' : '<span class="cross">✕ differs</span>'}</td><td class="mono">${esc(r.name)}</td><td>${esc(r.qtype)}</td><td class="mono">${r.ours.map(v => esc(v.length > 56 ? v.slice(0, 56) + "…" : v)).slice(0, 3).join("<br>")}${r.ours.length > 3 ? `<br><span class="muted">+ ${r.ours.length - 3} more</span>` : ""}</td></tr>`).join("");
+     return {
+       html: hero(`${good} / ${d.rows.length}`, "", `${good === d.rows.length ? '<span class="check">✓</span> Every' : '<span class="cross">✕</span> Not every'} name gets the same answer from our resolver as from <span class="mono">dig +trace</span>.`) +
+         `<div class="tablewrap"><table class="t"><thead><tr><th>Result</th><th>Name</th><th>Type</th><th>Answer (ours = dig)</th></tr></thead><tbody>${rows}</tbody></table></div>
+          <details class="more"><summary>dig @10.10.1.10 www.example.lab +trace</summary><pre>${esc(d.dig_trace)}</pre></details><div class="cmd">$ docker exec client python3 experiments/verify.py</div>`,
+       summary: `${good}/${d.rows.length} match dig`,
+     };
+   }},
+  {key: "noglue", title: "Missing glue", action: "Resolve www.noglue.lab",
+   lede: "The .lab TLD delegates noglue.lab to ns.example.lab but sends no address for it, so the resolver has to look that name up first.",
+   async run() {
+     const d = await api("resolve", {name: "www.noglue.lab", qtype: "A"});
+     const sub = d.steps.filter(s => s.depth).length;
+     return resolutionView(d, `${d.queries - sub} for the name itself + <b>${sub}</b> to find the nameserver's address (purple rows). With glue, the same lookup takes 3.`);
+   }},
+  {key: "truncation", title: "Truncation → TCP 53", action: "Resolve big.example.lab TXT",
+   lede: "The TXT records of big.example.lab do not fit in a 512-byte UDP reply. The server sets TC=1 and the resolver repeats the query over TCP.",
+   async run() {
+     const d = await api("resolve", {name: "big.example.lab", qtype: "TXT"});
+     const last = d.steps[d.steps.length - 1];
+     const v = resolutionView(d, "");
+     v.html = hero(last.response_bytes.toLocaleString(), "bytes", `Size of the reply that came back over TCP — more than the 512-byte UDP limit, so step ${last.index} shows <b>TC=1 → retried over TCP 53</b>. ${d.answers.length} TXT records.`) + v.html.slice(v.html.indexOf('<div class="tiles">'));
+     v.summary = `TC=1 → TCP · ${last.response_bytes} B reply`;
+     return v;
+   }},
+  {key: "compare", title: "Do53 vs DoT vs DoH", action: "Compare transports",
+   lede: "The same query to Unbound three ways. A first query opens a new connection, so DoT and DoH pay for the TCP and TLS 1.3 handshakes; a repeat query reuses it.",
+   async run() {
+     const d = await api("compare", {n: 5}); baseline = d;
+     const c = transportChart(d), gap = c.m.dot.f - c.m.do53.f;
+     return {
+       html: hero(signed(gap).replace(" ms", ""), "ms", `Extra time DoT's <b>first</b> query takes compared with plain Do53 (DoH: ${signed(c.m.doh.f - c.m.do53.f)}). On an open connection the gap is ${signed(c.m.dot.r - c.m.do53.r)} — the encryption itself is almost free.`) +
+         c.html + `<div class="cmd">$ docker exec client python3 experiments/compare.py --n ${d.n} --json</div>`,
+       tips: c.tips, summary: `DoT first query ${signed(gap)}`, after: replayTransports,
+     };
+   }},
+  {key: "impair", title: "Impairment with tc netem", action: "Apply and measure",
+   lede: "Add delay or loss on the R1–R2 transit link (half on each router), then repeat the transport comparison and the missing-glue lookup.",
+   controls: `<label for="n-rtt">Added RTT</label><select id="n-rtt"><option value="20">20 ms</option><option value="100">100 ms</option><option value="200" selected>200 ms</option></select><label for="n-loss">Loss</label><select id="n-loss"><option value="0" selected>0 %</option><option value="2">2 %</option><option value="5">5 %</option></select>`,
+   extra: `<button id="clear-netem">Clear netem</button>`,
+   async run() {
+     const rtt = +$("#n-rtt").value, loss = +$("#n-loss").value, label = `+${rtt} ms RTT, ${loss}% loss`;
+     if (!baseline) { setRunline("measuring the no-impairment baseline first…"); await api("netem", {rtt_ms: 0, loss_pct: 0}); baseline = await api("compare", {n: 5}); }
+     setRunline(`applying netem (${label}) on R1 and R2…`);
+     showNetem((await api("netem", {rtt_ms: rtt, loss_pct: loss})).netem);
+     setRunline("measuring Do53 / DoT / DoH…");
+     const now = await api("compare", {n: 5});
+     setRunline("resolving www.noglue.lab…");
+     const res = await api("resolve", {name: "www.noglue.lab", qtype: "A"});
+     const db = dumbbell(baseline, now, label);
+     return {
+       html: hero(ms(db.a.dot).replace(" ms", ""), "ms", `DoT first query with ${esc(label)} — it was ${ms(db.b.dot)} without impairment. ${loss ? `With ${loss}% loss, lost packets add retries, so expect wide spread between runs.` : `Do53 takes one round trip (${ms(db.a.do53)}); DoT takes ${(db.a.dot / db.a.do53).toFixed(1)}× and DoH ${(db.a.doh / db.a.do53).toFixed(1)}× as long — the TCP and TLS handshakes.`}`) +
+         `<h3 class="sec">First-query latency: before → after</h3>${db.html}
+          <h3 class="sec">www.noglue.lab with ${esc(label)}</h3>` +
+         tiles([{l: "queries", v: res.queries}, {l: "total time", v: ms(res.total_ms)}, {l: "per query", v: ms(res.total_ms / res.queries)}, {l: "packets incl. retries", v: res.packets_sent}]) +
+         ladder(res) + `<p class="small muted" style="margin-top:.8rem">netem stays on until you press <b>Clear netem</b>. Run full demo clears it automatically.</p>`,
+       tips: db.tips, summary: `${label}: DoT ${ms(db.a.dot)}`,
+       async after() { await replayTransports(); await replayResolution(res); },
+     };
+   }},
+];
+function resolutionView(d, caption) {
+  const ok = d.rcode === "NOERROR" && d.answers.length;
+  return {
+    html: hero(d.queries, d.queries === 1 ? "query" : "queries", `${ok ? '<span class="check">✓</span>' : '<span class="cross">✕ ' + esc(d.rcode) + "</span>"} ${caption}`) +
+      tiles([{l: "total time", v: ms(d.total_ms)}, {l: "packets incl. retries", v: d.packets_sent}, {l: "glue sub-lookups", v: d.sub_lookups}, {l: "status", v: esc(d.rcode)}]) +
+      ladder(d) + answerBlock(d),
+    summary: `${d.queries} queries · ${ms(d.total_ms)}${d.sub_lookups ? " · " + d.sub_lookups + " sub-lookup" : ""}`,
+    after: () => replayResolution(d),
+  };
+}
+
+/* =================================================================== stage + stepper */
+function buildStage() {
+  $("#stepper").innerHTML = STEPS.map((s, i) => `<li><button data-i="${i}" ${i ? "" : 'aria-current="step"'}>
+    <span class="n">${i + 1}</span><span class="t">${esc(s.title)}</span><span class="st" id="st-${s.key}" aria-hidden="true"></span><span class="s" id="sum-${s.key}"></span></button></li>`).join("");
+  $("#stage").innerHTML = STEPS.map((s, i) => `<section class="stage-panel" id="sp-${s.key}" ${i ? "hidden" : ""} aria-labelledby="h-${s.key}">
+    <div class="eyebrow">STEP ${i + 1} OF ${STEPS.length}</div><h2 id="h-${s.key}">${esc(s.title)}</h2><p class="lede">${esc(s.lede)}</p>
+    <div class="controls">${s.controls || ""}<button class="primary" data-run="${i}">${esc(s.action)}</button>${s.extra || ""}</div>
+    <div class="runline" id="rl-${s.key}">Not run yet. Press the button above, or <kbd>R</kbd>.</div><div class="result" id="res-${s.key}"></div></section>`).join("");
+  $$("#stepper button").forEach(b => b.onclick = () => select(+b.dataset.i));
+  $$("[data-run]").forEach(b => b.onclick = () => runStep(+b.dataset.run));
+  $("#q-name").addEventListener("keydown", e => { if (e.key === "Enter") { e.stopPropagation(); runStep(1); } });
+  $("#clear-netem").onclick = () => { if (!busy) clearNetem(); };
+}
+function select(i) {
+  current = i;
+  const focusInStage = $("#stage").contains(document.activeElement);
+  $$("#stepper button").forEach((b, j) => { if (j === i) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
+  $$(".stage-panel").forEach((p, j) => p.hidden = j !== i);
+  if (focusInStage) $(`[data-run="${i}"]`).focus();
+}
+let runlineKey = null;
+const setRunline = t => { if (runlineKey) $("#rl-" + runlineKey).textContent = t; };
+function lock(on) { busy = on; $$("[data-run], #runall-btn, #clear-netem, #start-btn").forEach(b => b.setAttribute("aria-disabled", on)); }
+
+async function runStep(i, {fromAll = false} = {}) {
+  if (busy && !fromAll) return false;
+  const s = STEPS[i]; select(i);
+  if (!fromAll) lock(true);
+  const res = $("#res-" + s.key), st = $("#st-" + s.key), rl = $("#rl-" + s.key);
+  runlineKey = s.key; res.classList.add("stale"); st.className = "st running"; st.textContent = "";
+  const t0 = performance.now(), timer = setInterval(() => { if (!rl.dataset.custom) rl.textContent = `running… ${((performance.now() - t0) / 1000).toFixed(1)} s`; }, 100);
+  rl.textContent = "running…"; say(`Running step ${i + 1}, ${s.title}`);
+  try {
+    const out = await s.run();
+    clearInterval(timer);
+    res.innerHTML = out.html; res.classList.remove("stale");
+    if (out.tips) bindBarTips(res, out.tips);
+    st.className = "st done"; st.textContent = "✓"; $("#sum-" + s.key).textContent = out.summary || "";
+    rl.textContent = `done in ${((performance.now() - t0) / 1000).toFixed(1)} s`;
+    say(`Step ${i + 1} done: ${out.summary || ""}`);
+    banner("");
+    if (out.after) await out.after();
+    return true;
+  } catch (e) {
+    clearInterval(timer);
+    res.innerHTML = `<div class="err-box">${esc(e.message)}</div>`; res.classList.remove("stale");
+    st.className = "st failed"; st.textContent = "✕"; rl.textContent = "failed";
+    say(`Step ${i + 1} failed: ${e.message}`);
+    return false;
+  } finally {
+    if (!fromAll) lock(false);
+    refreshStatus();
+  }
+}
+async function runAll() {
+  if (busy) return;
+  lock(true); $("#prog").hidden = false;
+  try {
+    showNetem((await api("netem", {rtt_ms: 0, loss_pct: 0})).netem);
+    $("#q-name").value = "www.example.lab"; $("#q-type").value = "A"; $("#n-rtt").value = "200"; $("#n-loss").value = "0";
+    for (let i = 0; i < STEPS.length; i++) {
+      $("#prog span").style.width = `${100 * i / STEPS.length}%`;
+      $("#prog-text").textContent = `step ${i + 1} of ${STEPS.length} · ${STEPS[i].title}`;
+      if (!await runStep(i, {fromAll: true})) { $("#prog-text").textContent = `stopped at step ${i + 1}`; return; }
+    }
+    $("#prog span").style.width = "100%"; $("#prog-text").textContent = "all 7 steps done";
+  } catch (e) { banner(e.message); }
+  finally { await clearNetem(true); lock(false); }
+}
+async function clearNetem(quiet) {
+  try { showNetem((await api("netem", {rtt_ms: 0, loss_pct: 0})).netem); if (quiet !== true) say("netem cleared"); }
+  catch (e) { if (quiet !== true) banner(e.message); }
+}
+
+/* =================================================================== status */
+let lastHealth = null;
+function announceHealth(text) { if (lastHealth !== null && lastHealth !== text) say(`Lab status: ${text}`); lastHealth = text; }
+async function refreshStatus() {
+  try {
+    const s = await api("status");
+    const sum = $("#health-sum"), list = $("#health-list");
+    if (!s.docker) {
+      sum.className = "status bad"; sum.innerHTML = `<span class="ico">✕</span> Docker not running`;
+      list.innerHTML = "<li>Start Docker Desktop; this page checks again every 5 s.</li>"; $("#start-btn").hidden = true; showNetem(null); announceHealth("Docker not running"); return;
+    }
+    const entries = Object.entries(s.containers), up = entries.filter(([, v]) => v.startsWith("Up")).length;
+    sum.className = "status " + (up === entries.length ? "ok" : "bad");
+    sum.innerHTML = `<span class="ico">${up === entries.length ? "✓" : "✕"}</span> ${up}/${entries.length} containers up`;
+    list.innerHTML = entries.map(([n, v]) => `<li><span class="mono">${esc(n)}</span><span>${v.startsWith("Up") ? '<span class="check">✓</span>' : '<span class="cross">✕</span>'} ${esc(v)}</span></li>`).join("");
+    $("#start-btn").hidden = up === entries.length;
+    announceHealth(`${up} of ${entries.length} containers up`);
+    showNetem(s.netem);
+  } catch (e) { banner("The dashboard server is not reachable. Is scripts/dashboard.py still running?"); }
+}
+
+/* =================================================================== saved results */
+const S = {rows: []};
+const pick = (metric, label, filter) => S.rows.filter(r => r.metric === metric && r.label === label && filter(r)).sort((a, b) => a.rtt_ms - b.rtt_ms || a.loss_pct - b.loss_pct);
+const pts = (rows, key) => rows.map(r => ({x: r[key], y: r.mean, sd: r.std, min: r.min, max: r.max}));
+async function loadSaved() {
+  let r;
+  try { r = await api("results"); } catch (e) { $("#p-results").innerHTML = `<div class="err-box">${esc(e.message)}</div>`; return; }
+  S.rows = r.summary;
+  const noLoss = x => x.loss_pct === 0, at20 = x => x.rtt_ms === 20;
+  const first = T.map(t => ({name: t.name, c: t.c, pts: pts(pick("first_query_ms", t.key, noLoss), "rtt_ms")}));
+  const repeat = T.map(t => ({name: t.name, c: t.c, pts: pts(pick("repeat_query_ms", t.key, noLoss), "rtt_ms")}));
+  const repLoss = T.map(t => ({name: t.name, c: t.c, pts: pts(pick("repeat_query_ms", t.key, at20), "loss_pct")}));
+  const iter = [{n: "www.noglue.lab", c: "var(--sub)", nm: "www.noglue.lab (no glue)"}, {n: "www.example.lab", c: "var(--ink-2)", nm: "www.example.lab"}, {n: "mail.example.lab", c: "var(--muted)", nm: "mail.example.lab"}]
+    .map(o => ({name: o.nm, c: o.c, pts: pts(pick("iter_total_ms", o.n, noLoss), "rtt_ms")}));
+  const f200 = Object.fromEntries(first.map(s => [s.name, s.pts.find(p => p.x === 200)?.y]));
+  const shared = Math.max(...first.flatMap(s => s.pts.map(p => p.y)));
+  const rttL = v => `+${v} ms RTT`, lossL = v => `${v}% loss`;
+  const tv = (series, xs, xl) => tableView(["Condition", ...series.map(s => s.name)], xs.map(x => [xl(x), ...series.map(s => { const p = s.pts.find(q => q.x === x); return p ? `${num(p.y)} ± ${num(p.sd)} [${num(p.min)}–${num(p.max)}]` : "–"; })]));
+  $("#p-results").innerHTML = `
+    <div class="page-head"><h2>Saved experiment results</h2><p class="muted">Mean of 3 runs per condition, from results/summary.csv. Hover or focus a chart and use ← → for exact values, ± standard deviation and min–max.</p></div>
+    <div class="panel chart-card" style="margin-bottom:1rem">${hero(num(f200.DoT), "ms", `DoT first query at +200 ms RTT — ${(f200.DoT / f200.Do53).toFixed(1)}× Do53 (${num(f200.Do53)} ms). DoH: ${num(f200.DoH)} ms. The gap grows with every millisecond of round-trip time.`)}</div>
+    <div class="grid2">
+      <div class="panel chart-card"><div class="chart-title">First-query latency vs RTT <span>— new connection each time</span></div>${legendFor(first)}<div class="lc" id="c-first"></div>${tv(first, [20, 100, 200], rttL)}</div>
+      <div class="panel chart-card"><div class="chart-title">Repeat-query latency vs RTT <span>— same scale; connection reused</span></div>${legendFor(repeat)}<div class="lc" id="c-repeat"></div>${tv(repeat, [20, 100, 200], rttL)}</div>
+      <div class="panel chart-card"><div class="chart-title">Repeat-query latency vs packet loss <span>— 20 ms RTT; UDP retry vs TCP retransmit</span></div>${legendFor(repLoss)}<div class="lc" id="c-loss"></div>${tv(repLoss, [0, 2, 5], lossL)}</div>
+      <div class="panel chart-card"><div class="chart-title">Iterative resolution time vs RTT <span>— our resolver; missing glue highlighted</span></div>${legendFor(iter)}<div class="lc" id="c-iter"></div>${tv(iter, [20, 100, 200], rttL)}</div>
+    </div>
+    <details class="more panel chart-card" style="margin-top:1rem"><summary>Full experiment table (mean ± sd [min – max])</summary><div class="md">${mdToHtml(r.table_md)}</div></details>
+    <details class="more panel chart-card"><summary>Original plots from analysis/analyze.py (${r.plots.length})</summary><div class="gallery" style="margin-top:.8rem">${r.plots.map(f => shot("results/plots", f, f.replace(/\.png$/, "").replace(/_/g, " "), "")).join("")}</div></details>`;
+  lineChart($("#c-first"), {series: first, xs: [20, 100, 200], xLabel: rttL, yMax: shared, yLabel: "ms", title: "First-query latency vs RTT"});
+  lineChart($("#c-repeat"), {series: repeat, xs: [20, 100, 200], xLabel: rttL, yMax: shared, yLabel: "ms", title: "Repeat-query latency vs RTT"});
+  lineChart($("#c-loss"), {series: repLoss, xs: [0, 2, 5], xLabel: lossL, yLabel: "ms", title: "Repeat-query latency vs packet loss"});
+  lineChart($("#c-iter"), {series: iter, xs: [20, 100, 200], xLabel: rttL, yLabel: "ms", title: "Iterative resolution time vs RTT"});
+  loadEvidence(r.screenshots);
+}
+function mdToHtml(md) {
+  const out = []; let tbl = [];
+  const flush = () => {
+    if (!tbl.length) return;
+    const cells = l => l.replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+    const [head, , ...body] = tbl;
+    out.push(`<div class="tablewrap"><table class="t"><thead><tr>${cells(head).map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${body.map(r => `<tr>${cells(r).map((c, i) => `<td class="${i > 1 ? "num" : ""}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+    tbl = [];
+  };
+  for (const line of md.split("\n")) {
+    if (line.trim().startsWith("|")) { tbl.push(line.trim()); continue; }
+    flush();
+    if (line.startsWith("### ")) out.push(`<h3 class="sec">${esc(line.slice(4))}</h3>`);
+    else if (line.trim() && !line.startsWith("# ")) out.push(`<p class="small muted" style="margin:.5rem 0">${esc(line)}</p>`);
+  }
+  flush(); return out.join("");
+}
+
+/* =================================================================== evidence */
+const SHOTS = {
+  ws01_icmp_traceroute: ["ICMP ping and traceroute", "01_icmp_ping_traceroute.pcapng"],
+  ws02_iterative_referral: ["Iterative query, referral with glue", "02_iterative_do53_udp.pcapng"],
+  ws03_missing_glue: ["Missing glue → sub-lookup", "03_missing_glue_sublookup.pcapng"],
+  ws04_truncation: ["TC=1 → retry over TCP 53", "04_truncation_tcp53_fallback.pcapng"],
+  ws05_do53_plaintext: ["Do53 to Unbound, readable on the wire", "05_recursive_do53_client_unbound.pcapng"],
+  ws06a_dot_encrypted: ["DoT: only TLS records visible", "06_dot_tls13_port853.pcapng"],
+  ws06b_tls13_handshake: ["TLS 1.3 handshake on port 853", "06_dot_tls13_port853.pcapng"],
+  ws06c_dot_decrypted: ["DoT decrypted with the key log", "06_dot_tls13_port853_with_keys.pcapng"],
+  ws07_doh_decrypted: ["DoH: HTTP/2 POST /dns-query, decrypted", "07_doh_tls13_http2_port443_with_keys.pcapng"],
+  ws08_loss_retry: ["Loss: UDP retry vs TCP retransmission", "08_loss_udp_retry_vs_tcp_retransmit.pcapng"],
+  pair_dot_encrypted_vs_decrypted: ["DoT before and after decryption", "06_dot_tls13_port853(_with_keys).pcapng"],
+};
+const shot = (dir, f, title, sub) => `<button class="shot panel" data-src="/files/${dir}/${encodeURIComponent(f)}" data-cap="${esc(title)}"><img loading="lazy" src="/files/${dir}/${encodeURIComponent(f)}" alt=""><div>${esc(title)}${sub ? `<span>${esc(sub)}</span>` : ""}</div></button>`;
+function loadEvidence(files) {
+  $("#p-evidence").innerHTML = `<div class="page-head"><h2>Wireshark evidence</h2><p class="muted">Annotated screenshots of the saved traces in captures/evidence/. Open the .pcapng files in Wireshark for the full packets; the *_with_keys copies decrypt DoT and DoH automatically.</p></div>
+    <div class="gallery">${files.map(f => { const k = f.replace(/\.png$/, ""); const [t, p] = SHOTS[k] || [k.replace(/_/g, " "), ""]; return shot("captures/screenshots/wireshark", f, t, p); }).join("")}</div>`;
+}
+
+/* =================================================================== wiring */
+const tabs = $$("[role=tab]");
+function openTab(t) {
+  tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; $("#" + x.getAttribute("aria-controls")).hidden = !on; });
+}
+tabs.forEach((t, i) => {
+  t.onclick = () => openTab(t);
+  t.onkeydown = e => {
+    const n = e.key === "ArrowRight" ? tabs[(i + 1) % tabs.length] : e.key === "ArrowLeft" ? tabs[(i + tabs.length - 1) % tabs.length]
+      : e.key === "Home" ? tabs[0] : e.key === "End" ? tabs[tabs.length - 1] : null;
+    if (n) { e.preventDefault(); openTab(n); n.focus(); }
+  };
+});
+$("#runall-btn").onclick = runAll;
+$("#start-btn").onclick = async () => {
+  if (busy) return;
+  lock(true); $("#health-sum").innerHTML = `<span class="ico">…</span> starting lab`;
+  try { await api("start", {}); banner(""); } catch (e) { banner(e.message); }
+  lock(false); refreshStatus();
+};
+const present = on => { document.documentElement.classList.toggle("present", on); $("#present-btn").setAttribute("aria-pressed", on); };
+$("#present-btn").onclick = () => present(!document.documentElement.classList.contains("present"));
+let shortcutsOn = true;
+try { shortcutsOn = localStorage.getItem("dnslab-shortcuts") !== "off"; } catch (_) {}
+const setShortcuts = on => {
+  shortcutsOn = on; const b = $("#keys-toggle");
+  b.setAttribute("aria-pressed", on); b.textContent = `Shortcuts: ${on ? "on" : "off"}`; $("#keys-help").hidden = !on;
+  try { localStorage.setItem("dnslab-shortcuts", on ? "on" : "off"); } catch (_) {}
+};
+$("#keys-toggle").onclick = () => { setShortcuts(!shortcutsOn); say(`Keyboard shortcuts ${shortcutsOn ? "on" : "off"}`); };
+setShortcuts(shortcutsOn);
+const setReplay = on => { replayOn = on; if (!on) $$("#pkts circle").forEach(c => c.remove()); const b = $("#replay-toggle"); b.setAttribute("aria-pressed", on); b.textContent = `Replay: ${on ? "on" : "off"}`; };
+$("#replay-toggle").onclick = () => setReplay(!replayOn);
+setReplay(replayOn);
+document.addEventListener("keydown", e => {
+  if (!shortcutsOn) return;
+  if ((e.target instanceof Element && e.target.closest("input, select, textarea")) || e.metaKey || e.ctrlKey || e.altKey) return;
+  if ($("#p-demo").hidden && !["p", "P"].includes(e.key)) return;
+  if (e.key === "ArrowDown" || e.key === "j") { e.preventDefault(); select(Math.min(STEPS.length - 1, current + 1)); }
+  else if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); select(Math.max(0, current - 1)); }
+  else if (e.key === "r" || e.key === "R") runStep(current);
+  else if (e.key === "A" && e.shiftKey) runAll();
+  else if (e.key === "p" || e.key === "P") present(!document.documentElement.classList.contains("present"));
+  else if (/^[1-7]$/.test(e.key)) select(+e.key - 1);
+});
+document.addEventListener("click", e => {
+  const card = e.target.closest(".shot"); if (!card) return;
+  const dlg = $("#viewer"); $("img", dlg).src = card.dataset.src; $("img", dlg).alt = card.dataset.cap; $("#viewer-cap").textContent = card.dataset.cap; dlg.showModal();
+});
+$("#viewer-close").onclick = () => $("#viewer").close();
+$("#viewer").addEventListener("click", e => { if (e.target.id === "viewer") e.target.close(); });
+document.addEventListener("click", e => { const h = $("#health"); if (h.open && !h.contains(e.target)) h.open = false; });
+
+drawTopo(); buildStage(); refreshStatus(); loadSaved();
+setInterval(() => { if (!busy) refreshStatus(); }, 5000);
+</script>
+</body>
+</html>
